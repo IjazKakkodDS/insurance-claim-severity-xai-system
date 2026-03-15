@@ -31,3 +31,15 @@ stages:
       - data/features/y_train.csv
       - data/features/y_valid.csv
       - models/feature_pipeline.pkl
+  
+  model_training:
+    cmd: python src/models/train.py
+    deps:
+      - src/models/train.py
+      - data/features/X_train.csv
+      - data/features/X_valid.csv
+      - data/features/y_train.csv
+      - data/features/y_valid.csv
+    outs:
+      - models/model.pkl
+      - reports/model_metrics.json
