@@ -134,3 +134,27 @@ stages:
       hash: md5
       md5: a22751987c5af236af7fff45cdae9570
       size: 61582
+  model_explainability:
+    cmd: python src/explainability/shap_explainer.py
+    deps:
+    - path: data/features/X_valid.csv
+      hash: md5
+      md5: 903c273db9388097b810be3f96199092
+      size: 179228177
+    - path: models/model.pkl
+      hash: md5
+      md5: b82ad2cbcdfb279ffab0dbb93dfec5d1
+      size: 857096
+    - path: src/explainability/shap_explainer.py
+      hash: md5
+      md5: abd735861e2bdf171a227978cfb8e2e7
+      size: 1178
+    outs:
+    - path: reports/shap_feature_importance.png
+      hash: md5
+      md5: 729eeec101135d47b3928db6b2d99f06
+      size: 32889
+    - path: reports/shap_summary_plot.png
+      hash: md5
+      md5: 5bed53f45e369fcaa9ec4c6f30c56f15
+      size: 74876

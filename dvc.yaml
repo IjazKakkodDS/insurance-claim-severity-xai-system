@@ -1,17 +1,14 @@
 stages:
 
   data_ingestion:
-
     cmd: python src/data/ingest_data.py
-
     deps:
       - src/data/ingest_data.py
       - data/raw/train.csv
       - data/raw/test.csv
-
     outs:
       - data/processed
-  
+
   data_validation:
     cmd: python src/data/validate.py
     deps:
@@ -19,7 +16,7 @@ stages:
       - data/processed/train_processed.csv
     outs:
       - data/validation_reports
-  
+
   feature_engineering:
     cmd: python src/features/feature_engineering.py
     deps:
@@ -31,7 +28,7 @@ stages:
       - data/features/y_train.csv
       - data/features/y_valid.csv
       - models/feature_pipeline.pkl
-  
+
   model_training:
     cmd: python src/models/train.py
     deps:
@@ -43,7 +40,7 @@ stages:
     outs:
       - models/model.pkl
       - reports/model_metrics.json
-  
+
   model_evaluation:
     cmd: python src/models/evaluate.py
     deps:
@@ -55,3 +52,13 @@ stages:
       - reports/evaluation_report.json
       - reports/residual_plot.png
       - reports/error_distribution.png
+
+  model_explainability:
+    cmd: python src/explainability/shap_explainer.py
+    deps:
+      - src/explainability/shap_explainer.py
+      - models/model.pkl
+      - data/features/X_valid.csv
+    outs:
+      - reports/shap_summary_plot.png
+      - reports/shap_feature_importance.png
