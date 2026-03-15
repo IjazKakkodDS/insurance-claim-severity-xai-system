@@ -11,3 +11,23 @@ stages:
 
     outs:
       - data/processed
+  
+  data_validation:
+    cmd: python src/data/validate.py
+    deps:
+      - src/data/validate.py
+      - data/processed/train_processed.csv
+    outs:
+      - data/validation_reports
+  
+  feature_engineering:
+    cmd: python src/features/feature_engineering.py
+    deps:
+      - src/features/feature_engineering.py
+      - data/processed/train_processed.csv
+    outs:
+      - data/features/X_train.csv
+      - data/features/X_valid.csv
+      - data/features/y_train.csv
+      - data/features/y_valid.csv
+      - models/feature_pipeline.pkl
