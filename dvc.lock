@@ -102,3 +102,35 @@ stages:
       hash: md5
       md5: 7f9395f72c793806cf5a87d9862b8d14
       size: 99
+  model_evaluation:
+    cmd: python src/models/evaluate.py
+    deps:
+    - path: data/features/X_valid.csv
+      hash: md5
+      md5: 903c273db9388097b810be3f96199092
+      size: 179228177
+    - path: data/features/y_valid.csv
+      hash: md5
+      md5: 2b62fe6b088ba69089ab8f891930a7c7
+      size: 329278
+    - path: models/model.pkl
+      hash: md5
+      md5: b82ad2cbcdfb279ffab0dbb93dfec5d1
+      size: 857096
+    - path: src/models/evaluate.py
+      hash: md5
+      md5: 0687d5148e93ac754013fdc3f189d928
+      size: 2300
+    outs:
+    - path: reports/error_distribution.png
+      hash: md5
+      md5: 5d4a5b8b09d60b26b9819dd544d98802
+      size: 17169
+    - path: reports/evaluation_report.json
+      hash: md5
+      md5: 7f9395f72c793806cf5a87d9862b8d14
+      size: 99
+    - path: reports/residual_plot.png
+      hash: md5
+      md5: a22751987c5af236af7fff45cdae9570
+      size: 61582
