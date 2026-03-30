@@ -1,0 +1,9 @@
+data/
+mlruns/
+.dvc/
+__pycache__/
+*.pyc
+.git/
+.env
+reports/evidently/
+logs/

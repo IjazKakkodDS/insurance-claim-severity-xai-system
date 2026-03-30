@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+pydantic
+pandas
+numpy
+scikit-learn==1.6.1
+xgboost
+shap
+lime
+matplotlib
+joblib
+pyyaml
+mlflow
+dvc
+evidently
+python-multipart

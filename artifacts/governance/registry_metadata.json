@@ -1,0 +1,11 @@
+{
+  "project_name": "Explainable Insurance Claim Severity Model",
+  "model_name": "claim_severity_model",
+  "registered_at_utc": "2026-03-28T09:41:13.718962+00:00",
+  "mlflow_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+  "tracking_uri": "file:///C:/ml_projects/insurance-claim-severity-xai-system/mlruns",
+  "model_file": "models\\best_model.pkl",
+  "pipeline_file": "models\\feature_pipeline.pkl",
+  "stage": "Production",
+  "version_note": "Initial local registry registration after Phase 7 Docker completion"
+}

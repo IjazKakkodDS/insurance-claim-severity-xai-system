@@ -1,0 +1,70 @@
+{
+    "project_name": "Explainable Insurance Claim Severity ML System",
+    "project_type": "Production-grade regression ML system with explainability and monitoring",
+    "artifact_name": "version_metadata",
+    "artifact_version": "v1.0.0",
+    "generated_at_utc": "2026-03-23T16:32:37.217987",
+    "model_summary": {
+        "selected_model_name": "XGBoost",
+        "task_type": "regression",
+        "target_description": "insurance claim severity prediction",
+        "best_model_path": "models/best_model.pkl",
+        "feature_pipeline_path": "models/feature_pipeline.pkl"
+    },
+    "training_summary": {
+        "candidate_models": [
+            "LinearRegression",
+            "RandomForest",
+            "XGBoost"
+        ],
+        "training_data_paths": {
+            "x_train": "data/features/X_train.csv",
+            "x_valid": "data/features/X_valid.csv",
+            "y_train": "data/features/y_train.csv",
+            "y_valid": "data/features/y_valid.csv"
+        },
+        "params_used": {
+            "model": {
+                "type": "xgboost"
+            },
+            "training": {
+                "test_size": 0.2,
+                "random_state": 42
+            },
+            "xgboost": {
+                "n_estimators": 200,
+                "learning_rate": 0.05,
+                "max_depth": 6,
+                "subsample": 0.8,
+                "colsample_bytree": 0.8,
+                "objective": "reg:squarederror"
+            }
+        }
+    },
+    "performance_summary": {
+        "model_selection_metrics": {
+            "MAE": 1190.0706206142972,
+            "RMSE": 1864.9442593455142,
+            "R2": 0.5737515089616827
+        },
+        "evaluation_metrics": {
+            "MAE": 1190.0706206142972,
+            "RMSE": 1864.9442593455142,
+            "R2": 0.5737515089616827
+        }
+    },
+    "monitoring_summary": {
+        "prediction_log_path": "logs/predictions.json",
+        "explanation_log_path": "logs/explanations.json",
+        "baseline_stats_path": "artifacts/baseline_stats.json",
+        "evidently_report_dir": "reports/evidently"
+    },
+    "governance_artifact_paths": {
+        "model_metrics_report": "reports/model_metrics.json",
+        "evaluation_report": "reports/evaluation_report.json",
+        "residual_plot": "reports/residual_plot.png",
+        "error_distribution_plot": "reports/error_distribution.png",
+        "feature_manifest": "artifacts/feature_manifest.json",
+        "run_id_file": "artifacts/run_id.txt"
+    }
+}

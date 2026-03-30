@@ -1,0 +1,194 @@
+[
+  {
+    "timestamp": "2026-03-23T08:00:37.233776+00:00",
+    "request_id": "4c61eb55-dab2-4b13-982f-40d2c1930dfe",
+    "input": {
+      "cont1": 0.5,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 39.28
+  },
+  {
+    "timestamp": "2026-03-23T08:00:46.468327+00:00",
+    "request_id": "918c87d3-2bd2-41e0-ad37-94a19ead3fc6",
+    "input": {
+      "cont1": 1.2,
+      "cont2": 3.5,
+      "cat1": "B",
+      "cat2": "X"
+    },
+    "prediction": 74155.8828125,
+    "latency_ms": 27.08
+  },
+  {
+    "timestamp": "2026-03-23T08:04:03.816049+00:00",
+    "request_id": "b97a9029-164b-4d3e-a3f7-686a029d7456",
+    "input": {
+      "cont1": 0.5,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 36.74
+  },
+  {
+    "timestamp": "2026-03-23T08:04:14.418515+00:00",
+    "request_id": "e5bad8ee-659c-4b99-8998-336233cc39d9",
+    "input": {
+      "cont1": 1.2,
+      "cont2": 3.5,
+      "cat1": "B",
+      "cat2": "X"
+    },
+    "prediction": 74155.8828125,
+    "latency_ms": 25.01
+  },
+  {
+    "timestamp": "2026-03-23T08:19:50.501156+00:00",
+    "request_id": "684ea36d-f3d8-4129-a656-5f85d142ee22",
+    "input": {
+      "cont1": 0.5,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 33.71
+  },
+  {
+    "timestamp": "2026-03-23T08:20:01.078396+00:00",
+    "request_id": "0e90717c-cf55-4dcb-a22a-09f25dc4b02b",
+    "input": {
+      "cont1": 1.2,
+      "cont2": 3.5,
+      "cat1": "B",
+      "cat2": "X"
+    },
+    "prediction": 74155.8828125,
+    "latency_ms": 20.4
+  },
+  {
+    "timestamp": "2026-03-28T09:49:28.566358+00:00",
+    "request_id": "c366900c-c99a-4297-a21c-5af15a54ece9",
+    "input": {
+      "cont1": 0.5,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 54.11
+  },
+  {
+    "timestamp": "2026-03-28T11:42:16.378550+00:00",
+    "request_id": "b56f9a57-c306-4bd4-963e-1cbaa31dc5dd",
+    "input": {
+      "cont1": 10.5,
+      "cat1": "cat1 = A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 52.45
+  },
+  {
+    "timestamp": "2026-03-29T10:38:55.953565+00:00",
+    "request_id": "e1d32c09-48e2-465e-a33f-0a66446599cb",
+    "input": {
+      "cont1": 50000,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 308.17
+  },
+  {
+    "timestamp": "2026-03-29T10:45:48.163725+00:00",
+    "request_id": "2729652a-5223-46a5-a995-ddf6c6555e37",
+    "input": {
+      "cont1": 50000,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 52.14
+  },
+  {
+    "timestamp": "2026-03-29T10:46:11.914799+00:00",
+    "request_id": "7f615235-f699-4fb0-aa5c-6ef645aeeadd",
+    "input": {
+      "cont1": 70000,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 39.88
+  },
+  {
+    "timestamp": "2026-03-29T10:48:33.212379+00:00",
+    "request_id": "5ae40d14-5fd6-40b3-bccb-06ded5c62201",
+    "input": {
+      "cont1": 0,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 23.39
+  },
+  {
+    "timestamp": "2026-03-29T10:48:43.972957+00:00",
+    "request_id": "87f183e2-547c-4270-a98f-b89583af73b1",
+    "input": {
+      "cont1": 0,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 43.85
+  },
+  {
+    "timestamp": "2026-03-29T10:49:12.334498+00:00",
+    "request_id": "7696f677-83f0-4b57-9a39-6cffe199e19e",
+    "input": {
+      "cont1": 999999,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 28.98
+  },
+  {
+    "timestamp": "2026-03-29T10:49:39.266626+00:00",
+    "request_id": "ff62b5b2-ca73-4c82-b2ea-2aa29854fa5d",
+    "input": {
+      "cont1": 999999,
+      "cat1": "AB"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 30.93
+  },
+  {
+    "timestamp": "2026-03-29T11:14:49.884828+00:00",
+    "request_id": "d030f15e-7921-49d2-a2f3-658555f82e21",
+    "input": {
+      "cont1": 50000,
+      "cat1": "A"
+    },
+    "prediction": 74027.84375,
+    "latency_ms": 40.52
+  },
+  {
+    "timestamp": "2026-03-29T14:59:25.051131+00:00",
+    "request_id": "3222f264-b277-4843-89c1-72b103651479",
+    "input": {
+      "cont1": 50000,
+      "cat1": "B",
+      "cat71": "A",
+      "cat89": "A",
+      "cat116": "A"
+    },
+    "prediction": 50733.58984375,
+    "latency_ms": 64.1
+  },
+  {
+    "timestamp": "2026-03-29T15:00:41.019955+00:00",
+    "request_id": "d1a864d1-5933-456d-bb7b-fff65b41c3c6",
+    "input": {
+      "cont1": 50000,
+      "cat1": "B",
+      "cat71": "B",
+      "cat89": "A",
+      "cat116": "A"
+    },
+    "prediction": 73837.375,
+    "latency_ms": 38.5
+  }
+]

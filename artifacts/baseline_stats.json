@@ -1,0 +1,24 @@
+{
+  "prediction_stats": {
+    "mean": 74000.0,
+    "std": 1000.0,
+    "count": 100
+  },
+  "feature_stats": {
+    "cont1": {
+      "mean": 0.75,
+      "std": 0.25,
+      "count": 100
+    },
+    "cont2": {
+      "mean": 2.5,
+      "std": 1.0,
+      "count": 100
+    },
+    "cont3": {
+      "mean": 5.0,
+      "std": 2.0,
+      "count": 100
+    }
+  }
+}

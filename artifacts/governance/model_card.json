@@ -1,0 +1,107 @@
+{
+    "model_card_version": "v1.0.0",
+    "generated_at_utc": "2026-03-23T16:32:41.789869",
+    "model_overview": {
+        "model_name": "XGBoost",
+        "project_name": "Explainable Insurance Claim Severity ML System",
+        "model_type": "Supervised regression model",
+        "primary_objective": "Predict insurance claim severity using engineered numerical and categorical features.",
+        "deployment_artifact": "models/best_model.pkl",
+        "preprocessing_artifact": "models/feature_pipeline.pkl"
+    },
+    "intended_use": {
+        "primary_users": [
+            "ML engineers",
+            "data scientists",
+            "analytics stakeholders",
+            "portfolio reviewers",
+            "technical interviewers"
+        ],
+        "use_cases": [
+            "insurance claim severity estimation",
+            "model explainability demonstration",
+            "monitoring and drift reporting demonstration",
+            "end-to-end ML system portfolio showcase"
+        ],
+        "out_of_scope_use_cases": [
+            "fully automated decision-making without human review",
+            "production insurance underwriting without additional validation",
+            "medical, legal, or life-critical decision support"
+        ]
+    },
+    "training_data": {
+        "dataset_context": "Allstate Claim Severity dataset",
+        "input_sources": [
+            "data/raw/train.csv",
+            "data/raw/test.csv"
+        ],
+        "processed_feature_sources": [
+            "data/features/X_train.csv",
+            "data/features/X_valid.csv",
+            "data/features/y_train.csv",
+            "data/features/y_valid.csv"
+        ]
+    },
+    "performance": {
+        "model_selection_metrics": {
+            "MAE": 1190.0706206142972,
+            "RMSE": 1864.9442593455142,
+            "R2": 0.5737515089616827
+        },
+        "evaluation_metrics": {
+            "MAE": 1190.0706206142972,
+            "RMSE": 1864.9442593455142,
+            "R2": 0.5737515089616827
+        }
+    },
+    "explainability": {
+        "method": "SHAP TreeExplainer",
+        "service_artifact": "src/explainability/shap_service.py",
+        "prediction_endpoint": "/predict",
+        "explain_endpoint": "/explain",
+        "explanation_behavior": [
+            "raw sparse input is aligned to expected raw training features",
+            "missing features are imputed with serving defaults",
+            "input is transformed through the saved feature pipeline",
+            "prediction is generated using the selected best model",
+            "top 10 SHAP feature contributions are returned"
+        ]
+    },
+    "monitoring": {
+        "prediction_log_path": "logs/predictions.json",
+        "explanation_log_path": "logs/explanations.json",
+        "monitoring_endpoints": [
+            "/monitoring/summary",
+            "/monitoring/drift",
+            "/monitoring/distribution",
+            "/monitoring/evidently"
+        ],
+        "evidently_report_dir": "reports/evidently"
+    },
+    "ethical_considerations": {
+        "risks": [
+            "predictions may reflect dataset-specific biases",
+            "model performance may degrade under distribution shift",
+            "explanations indicate feature contribution, not causality",
+            "synthetic monitoring baselines may produce unstable statistical warnings"
+        ],
+        "human_oversight_required": true,
+        "fairness_review_status": "not yet completed",
+        "production_readiness_note": "This system demonstrates production-style architecture, but a real production rollout would require stronger governance, fairness analysis, and historical-baseline monitoring."
+    },
+    "limitations": {
+        "known_limitations": [
+            "baseline drift reference is currently synthetic rather than historical",
+            "feature contribution labels are generic transformed feature indices",
+            "fairness assessment is not yet implemented",
+            "robust adversarial input testing is not yet implemented"
+        ]
+    },
+    "artifact_references": {
+        "version_metadata": "artifacts/governance/version_metadata.json",
+        "evaluation_report": "reports/evaluation_report.json",
+        "model_metrics": "reports/model_metrics.json",
+        "residual_plot": "reports/residual_plot.png",
+        "error_distribution_plot": "reports/error_distribution.png"
+    }
+}

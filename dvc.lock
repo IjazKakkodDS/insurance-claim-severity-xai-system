@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   data_ingestion:
-    cmd: python src/data/ingest_data.py
+    cmd: python -m src.data.ingest_data
     deps:
     - path: data/raw/test.csv
       hash: md5
@@ -22,7 +22,7 @@ stages:
       size: 116060531
       nfiles: 2
   data_validation:
-    cmd: python src/data/validate.py
+    cmd: python -m src.data.validate
     deps:
     - path: data/processed/train_processed.csv
       hash: md5
@@ -30,16 +30,16 @@ stages:
       size: 70219185
     - path: src/data/validate.py
       hash: md5
-      md5: e3babb89b8d5a0c2340c47cff2a9d01c
-      size: 932
+      md5: 560f04734aa28251b92808363175a218
+      size: 2447
     outs:
     - path: data/validation_reports
       hash: md5
-      md5: c6e6daa93c1fc640a5c21dc1098877ea.dir
-      size: 2880
+      md5: a3e030c5a816009f5f4916ba22d15ebf.dir
+      size: 4093
       nfiles: 1
   feature_engineering:
-    cmd: python src/features/feature_engineering.py
+    cmd: python -m src.features.feature_engineering
     deps:
     - path: data/processed/train_processed.csv
       hash: md5
@@ -47,8 +47,8 @@ stages:
       size: 70219185
     - path: src/features/feature_engineering.py
       hash: md5
-      md5: 713c428f1fba751bfc064d9210b46d5a
-      size: 3271
+      md5: f151e0e5205347650cda94c89d1b236c
+      size: 3722
     outs:
     - path: data/features/X_train.csv
       hash: md5
@@ -71,7 +71,7 @@ stages:
       md5: f3ecb1c90d8534626d822d74e5100189
       size: 33854
   model_training:
-    cmd: python src/models/train.py
+    cmd: python -m src.models.train
     deps:
     - path: data/features/X_train.csv
       hash: md5
@@ -89,22 +89,46 @@ stages:
       hash: md5
       md5: 2b62fe6b088ba69089ab8f891930a7c7
       size: 329278
+    - path: params.yaml
+      hash: md5
+      md5: 9a9d45e6bfa20fdbde08869845631299
+      size: 220
     - path: src/models/train.py
       hash: md5
-      md5: 0651f5c00654025dc932cc0779214f44
-      size: 2395
+      md5: 4a1aa681a14306e7da730a14fb7af508
+      size: 3954
     outs:
-    - path: models/model.pkl
+    - path: artifacts/run_id.txt
+      hash: md5
+      md5: c1855c51c38d6db0e970a518258f286a
+      size: 32
+    - path: models/LinearRegression.pkl
+      hash: md5
+      md5: ec38c26124fdd4824f87a55e90fa87d6
+      size: 25697
+    - path: models/RandomForest.pkl
+      hash: md5
+      md5: aa4c6f40c7d192d9e2fb0cb0bc1eaa23
+      size: 1371256401
+    - path: models/XGBoost.pkl
+      hash: md5
+      md5: b82ad2cbcdfb279ffab0dbb93dfec5d1
+      size: 857096
+    - path: models/best_model.pkl
       hash: md5
       md5: b82ad2cbcdfb279ffab0dbb93dfec5d1
       size: 857096
     - path: reports/model_metrics.json
       hash: md5
-      md5: 7f9395f72c793806cf5a87d9862b8d14
-      size: 99
+      md5: e0a4c2cedd9786f27d7b1317971a06c4
+      size: 166
   model_evaluation:
-    cmd: python src/models/evaluate.py
+    cmd: python -m src.models.evaluate
     deps:
+    - path: artifacts/run_id.txt
+      hash: md5
+      md5: c1855c51c38d6db0e970a518258f286a
+      size: 32
     - path: data/features/X_valid.csv
       hash: md5
       md5: 903c273db9388097b810be3f96199092
@@ -113,14 +137,14 @@ stages:
       hash: md5
       md5: 2b62fe6b088ba69089ab8f891930a7c7
       size: 329278
-    - path: models/model.pkl
+    - path: models/best_model.pkl
       hash: md5
       md5: b82ad2cbcdfb279ffab0dbb93dfec5d1
       size: 857096
     - path: src/models/evaluate.py
       hash: md5
-      md5: 0687d5148e93ac754013fdc3f189d928
-      size: 2300
+      md5: c41b8d286da005127d486d498f961c94
+      size: 2086
     outs:
     - path: reports/error_distribution.png
       hash: md5
@@ -135,20 +159,24 @@ stages:
       md5: a22751987c5af236af7fff45cdae9570
       size: 61582
   model_explainability:
-    cmd: python src/explainability/shap_explainer.py
+    cmd: python -m src.explainability.shap_explainer
     deps:
+    - path: artifacts/run_id.txt
+      hash: md5
+      md5: c1855c51c38d6db0e970a518258f286a
+      size: 32
     - path: data/features/X_valid.csv
       hash: md5
       md5: 903c273db9388097b810be3f96199092
       size: 179228177
-    - path: models/model.pkl
+    - path: models/best_model.pkl
       hash: md5
       md5: b82ad2cbcdfb279ffab0dbb93dfec5d1
       size: 857096
     - path: src/explainability/shap_explainer.py
       hash: md5
-      md5: abd735861e2bdf171a227978cfb8e2e7
-      size: 1178
+      md5: b69d8ad46a0bc015fa18d4b070f43e8d
+      size: 1475
     outs:
     - path: reports/shap_feature_importance.png
       hash: md5
@@ -156,5 +184,5 @@ stages:
       size: 32889
     - path: reports/shap_summary_plot.png
       hash: md5
-      md5: 5bed53f45e369fcaa9ec4c6f30c56f15
-      size: 74876
+      md5: a97225d779c15d296a5f339e4c78471e
+      size: 74893

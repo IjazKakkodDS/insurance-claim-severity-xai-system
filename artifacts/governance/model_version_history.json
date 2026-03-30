@@ -1,0 +1,84 @@
+[
+  {
+    "event_type": "promotion",
+    "timestamp_utc": "2026-03-28T10:15:18.319072+00:00",
+    "promoted_by": "Ijaz",
+    "reason": "Initial production promotion",
+    "from_model_name": "claim_severity_model",
+    "from_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "from_stage": "Production",
+    "from_version": null,
+    "to_model_name": "claim_severity_model",
+    "to_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "to_stage": "Production",
+    "to_version": "v1",
+    "registry_metadata_snapshot": {
+      "project_name": "Explainable Insurance Claim Severity Model",
+      "model_file": "models\\best_model.pkl",
+      "pipeline_file": "models\\feature_pipeline.pkl",
+      "registered_at_utc": "2026-03-28T09:41:13.718962+00:00"
+    }
+  },
+  {
+    "event_type": "rollback",
+    "timestamp_utc": "2026-03-28T10:17:18.792968+00:00",
+    "rolled_back_by": "Ijaz",
+    "reason": "Testing rollback flow",
+    "from_model_name": "claim_severity_model",
+    "from_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "from_stage": "Production",
+    "from_version": "v1",
+    "to_model_name": "claim_severity_model",
+    "to_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "to_stage": "Production",
+    "to_version": null
+  },
+  {
+    "event_type": "rollback",
+    "timestamp_utc": "2026-03-28T10:19:56.004422+00:00",
+    "rolled_back_by": "Ijaz",
+    "reason": "Testing rollback flow",
+    "from_model_name": "claim_severity_model",
+    "from_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "from_stage": "Production",
+    "from_version": null,
+    "to_model_name": "claim_severity_model",
+    "to_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "to_stage": "Production",
+    "to_version": "v1"
+  },
+  {
+    "event_type": "promotion",
+    "timestamp_utc": "2026-03-28T10:20:41.749270+00:00",
+    "promoted_by": "Ijaz",
+    "reason": "Simulated second production version for lifecycle testing",
+    "from_model_name": "claim_severity_model",
+    "from_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "from_stage": "Production",
+    "from_version": "v1",
+    "to_model_name": "claim_severity_model",
+    "to_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "to_stage": "Production",
+    "to_version": "v2",
+    "registry_metadata_snapshot": {
+      "project_name": "Explainable Insurance Claim Severity Model",
+      "model_file": "models\\best_model.pkl",
+      "pipeline_file": "models\\feature_pipeline.pkl",
+      "registered_at_utc": "2026-03-28T09:41:13.718962+00:00"
+    }
+  },
+  {
+    "event_type": "rollback",
+    "timestamp_utc": "2026-03-28T10:20:47.275205+00:00",
+    "rolled_back_by": "Ijaz",
+    "reason": "Rollback from simulated v2 to v1",
+    "from_model_name": "claim_severity_model",
+    "from_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "from_stage": "Production",
+    "from_version": "v2",
+    "to_model_name": "claim_severity_model",
+    "to_run_id": "22dda3c7b6604f9daaa05f5f6418c363",
+    "to_stage": "Production",
+    "to_version": "v1"
+  }
+]
