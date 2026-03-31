@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/config";
 
@@ -231,7 +231,7 @@ function getBusinessInterpretation(
   return "The simulated scenario produced an output shift despite minimal visible input change, which may indicate threshold effects or model sensitivity around the current input combination.";
 }
 
-export default function ScoringPage() {
+function ScoringPageContent() {
   const searchParams = useSearchParams();
 
   const [cont1, setCont1] = useState("");
@@ -1085,5 +1085,31 @@ export default function ScoringPage() {
         </section>
       )}
     </div>
+  );
+}
+
+function ScoringPageFallback() {
+  return (
+    <div className="space-y-8">
+      <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
+        <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+          Scoring Console
+        </p>
+        <h1 className="text-4xl font-semibold tracking-tight text-white">
+          Claim Severity Scoring
+        </h1>
+        <p className="max-w-3xl text-sm leading-6 text-neutral-400">
+          Loading scoring workspace...
+        </p>
+      </section>
+    </div>
+  );
+}
+
+export default function ScoringPage() {
+  return (
+    <Suspense fallback={<ScoringPageFallback />}>
+      <ScoringPageContent />
+    </Suspense>
   );
 }
