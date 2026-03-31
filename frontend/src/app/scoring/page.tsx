@@ -50,7 +50,6 @@ function formatMetric(value?: number) {
   });
 }
 
-// Risk Band Logic
 function getRiskBand(prediction?: number) {
   if (typeof prediction !== "number") return "Unavailable";
 
@@ -59,7 +58,6 @@ function getRiskBand(prediction?: number) {
   return "High";
 }
 
-// Confidence Proxy
 function getConfidence(prediction?: number) {
   if (typeof prediction !== "number") return "Unavailable";
 
@@ -68,7 +66,6 @@ function getConfidence(prediction?: number) {
   return "Lower Confidence";
 }
 
-// Decision Summary Generator
 function getDecisionSummary(prediction?: number) {
   if (typeof prediction !== "number") return "Unavailable";
 
@@ -83,7 +80,6 @@ function getDecisionSummary(prediction?: number) {
   return "This claim is classified as high severity. Strong contributing factors are driving elevated risk exposure.";
 }
 
-// Operational Recommendation
 function getRecommendation(prediction?: number) {
   if (typeof prediction !== "number") return "Unavailable";
 
@@ -98,7 +94,6 @@ function getRecommendation(prediction?: number) {
   return "Recommend full manual review and risk escalation.";
 }
 
-// Delta narrative engine
 function getDeltaNarrative(
   delta?: number,
   baselinePrediction?: number,
@@ -127,7 +122,6 @@ function getDeltaNarrative(
   )}, indicating reduced expected claim exposure under the simulated scenario.`;
 }
 
-// Recommendation comparison engine
 function getRecommendationShift(
   baselineRecommendation?: string,
   simulatedRecommendation?: string
@@ -143,7 +137,6 @@ function getRecommendationShift(
   return `Operational recommendation changed from "${baselineRecommendation}" to "${simulatedRecommendation}".`;
 }
 
-// Impact classification
 function getDecisionImpact(delta?: number) {
   if (typeof delta !== "number") return "Unavailable";
   if (delta > 0) return "Deterioration";
@@ -164,7 +157,6 @@ function getChangedDriverLabels(
   return changed;
 }
 
-// Business interpretation layer
 function getBusinessInterpretation(
   delta?: number,
   baselineRiskBand?: string,
@@ -231,6 +223,132 @@ function getBusinessInterpretation(
   return "The simulated scenario produced an output shift despite minimal visible input change, which may indicate threshold effects or model sensitivity around the current input combination.";
 }
 
+function getDriverSensitivityInsight() {
+  return {
+    primary: "cat71",
+    secondary: ["cat89", "cat116"],
+    weak: ["cont1", "cat1"],
+    narrative:
+      "Observed sensitivity testing indicates that cat71 is the dominant driver in the current scoring behavior. Changes to cont1, cat1, cat89, and cat116 showed limited standalone movement in the tested scenarios, while cat71 materially shifted severity from Medium to High.",
+  };
+}
+
+function getDriverSensitivityStatus(
+  currentCat71?: string,
+  baselineCat71?: string
+) {
+  if (!currentCat71 || !baselineCat71) return "Awaiting driver comparison";
+
+  if (
+    normalizeDriverValue(currentCat71) === normalizeDriverValue(baselineCat71)
+  ) {
+    return "Primary driver unchanged";
+  }
+
+  return "Primary driver shifted";
+}
+
+function getModelStabilitySignal(delta?: number) {
+  if (typeof delta !== "number") {
+    return {
+      label: "Awaiting simulation",
+      description:
+        "Run a counterfactual comparison to evaluate system stability under feature perturbation.",
+      tone: "border-neutral-700 bg-neutral-800 text-neutral-300",
+    };
+  }
+
+  const absDelta = Math.abs(delta);
+
+  if (absDelta === 0) {
+    return {
+      label: "High stability",
+      description:
+        "The system remains unchanged under the tested perturbation, indicating strong operational stability.",
+      tone: "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
+    };
+  }
+
+  if (absDelta < 5000) {
+    return {
+      label: "Moderate stability",
+      description:
+        "The system moved slightly, but the change remains controlled and does not indicate major decision volatility.",
+      tone: "border-amber-500/20 bg-amber-500/10 text-amber-300",
+    };
+  }
+
+  return {
+    label: "Sensitivity detected",
+    description:
+      "The tested change produced a material response, indicating that the model is reacting to a meaningful driver shift.",
+    tone: "border-red-500/20 bg-red-500/10 text-red-300",
+  };
+}
+
+function getDriverImpactHighlight(
+  delta?: number,
+  driverStatus?: string,
+  simCat71?: string,
+  cat71?: string
+) {
+  if (typeof delta !== "number") {
+    return {
+      title: "Driver impact not yet evaluated",
+      description:
+        "Run a simulation to determine whether a dominant driver shift has materially affected system output.",
+      tone: "border-neutral-700 bg-neutral-800 text-neutral-300",
+    };
+  }
+
+  const absDelta = Math.abs(delta);
+
+  if (
+    driverStatus === "Primary driver shifted" &&
+    absDelta >= 5000 &&
+    simCat71 &&
+    cat71
+  ) {
+    return {
+      title: "Primary driver impact detected",
+      description: `cat71 changed from ${cat71} to ${simCat71} and produced a material output shift. This confirms dominant-driver sensitivity in the current operating range.`,
+      tone: "border-cyan-500/20 bg-cyan-500/10 text-cyan-300",
+    };
+  }
+
+  if (driverStatus === "Primary driver unchanged" && absDelta === 0) {
+    return {
+      title: "Stable under tested adjustment",
+      description:
+        "The dominant driver remained unchanged and the system output stayed stable, supporting controlled decision behavior.",
+      tone: "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
+    };
+  }
+
+  if (absDelta < 5000) {
+    return {
+      title: "Limited driver impact",
+      description:
+        "The tested feature adjustment produced only a limited response, suggesting the scenario remains in a stable response region.",
+      tone: "border-amber-500/20 bg-amber-500/10 text-amber-300",
+    };
+  }
+
+  return {
+    title: "Material response observed",
+    description:
+      "The tested adjustment produced a meaningful output shift and should be interpreted as an operationally relevant sensitivity event.",
+    tone: "border-red-500/20 bg-red-500/10 text-red-300",
+  };
+}
+
+function getPredictionDeltaLabel(delta?: number) {
+  if (typeof delta !== "number") return "Awaiting comparison";
+  if (delta === 0) return "No change";
+  if (Math.abs(delta) < 5000) return "Minor shift";
+  return "Significant shift";
+}
+
 function ScoringPageContent() {
   const searchParams = useSearchParams();
 
@@ -242,7 +360,6 @@ function ScoringPageContent() {
 
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
 
-  // Scenario simulation
   const [simCont1, setSimCont1] = useState("");
   const [simCat1, setSimCat1] = useState("");
   const [simCat71, setSimCat71] = useState("");
@@ -345,13 +462,11 @@ function ScoringPageContent() {
       const data = await response.json();
       setPrediction(data);
 
-      // Normalize baseline input state after successful run
       setCat1(normalizedCat1);
       setCat71(normalizedCat71);
       setCat89(normalizedCat89);
       setCat116(normalizedCat116);
 
-      // Pre-fill simulation inputs with baseline values after first successful run
       setSimCont1(String(parsedCont1));
       setSimCat1(normalizedCat1);
       setSimCat71(normalizedCat71);
@@ -441,7 +556,6 @@ function ScoringPageContent() {
       const data = await response.json();
       setSimPrediction(data);
 
-      // Normalize simulation state after successful run
       setSimCat1(normalizedSimCat1);
       setSimCat71(normalizedSimCat71);
       setSimCat89(normalizedSimCat89);
@@ -505,9 +619,19 @@ function ScoringPageContent() {
     simCat116
   );
 
+  const driverInsight = getDriverSensitivityInsight();
+  const driverSensitivityStatus = getDriverSensitivityStatus(simCat71, cat71);
+  const modelStabilitySignal = getModelStabilitySignal(delta);
+  const driverImpactHighlight = getDriverImpactHighlight(
+    delta,
+    driverSensitivityStatus,
+    simCat71,
+    cat71
+  );
+  const predictionDeltaLabel = getPredictionDeltaLabel(delta);
+
   return (
     <div className="space-y-8">
-      {/* Header */}
       <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
         <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
           Scoring Console
@@ -529,9 +653,10 @@ function ScoringPageContent() {
                 Scenario context loaded
               </p>
               <p className="mt-1 text-sm leading-6 text-neutral-100">
-                A predefined operational scenario has been routed into the scoring
-                workspace. Review the populated inputs, evaluate the prediction,
-                and use the counterfactual layer to compare alternative conditions.
+                A predefined operational scenario has been routed into the
+                scoring workspace. Review the populated inputs, evaluate the
+                prediction, and use the counterfactual layer to compare
+                alternative conditions.
               </p>
             </div>
 
@@ -542,9 +667,7 @@ function ScoringPageContent() {
         </section>
       )}
 
-      {/* Main Grid */}
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        {/* Input Panel */}
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -577,7 +700,6 @@ function ScoringPageContent() {
             />
           </div>
 
-          {/* Added: top driver controls */}
           <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -639,7 +761,7 @@ function ScoringPageContent() {
             </div>
           </div>
 
-          <div className="mt-6 flex gap-3">
+          <div className="mt-6 flex flex-wrap gap-3">
             <button
               onClick={handleSubmit}
               disabled={isLoading}
@@ -647,12 +769,22 @@ function ScoringPageContent() {
             >
               {isLoading ? "Running..." : "Generate Prediction"}
             </button>
+
+            <button
+              onClick={() => {
+                setCat71("B");
+                setCat89(cat89 || "A");
+                setCat116(cat116 || "A");
+              }}
+              className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+            >
+              Run High-Impact Setup
+            </button>
           </div>
 
           {error && <div className="mt-5 text-sm text-red-400">{error}</div>}
         </div>
 
-        {/* Result Panel */}
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6 space-y-4">
           {!prediction && <p className="text-neutral-500">No prediction yet.</p>}
 
@@ -662,19 +794,48 @@ function ScoringPageContent() {
                 {formatMetric(prediction.prediction)}
               </div>
 
-              <div className="text-sm text-neutral-400">
-                Risk Band:{" "}
-                <span className="text-white font-semibold">{riskBand}</span>
-              </div>
+              <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-4">
+                <p className="text-xs uppercase tracking-wide text-blue-300">
+                  Executive Decision Summary
+                </p>
 
-              <div className="text-sm text-neutral-400">
-                Confidence:{" "}
-                <span className="text-white font-semibold">{confidence}</span>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <p className="text-xs text-neutral-400">Risk Band</p>
+                    <p className="mt-1 text-base font-semibold text-white">
+                      {riskBand}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-neutral-400">Confidence</p>
+                    <p className="mt-1 text-base font-semibold text-white">
+                      {confidence}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <p className="text-xs text-neutral-400">
+                    Operational Recommendation
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-yellow-300">
+                    {recommendation}
+                  </p>
+                </div>
+
+                <div className="mt-4 rounded-lg border border-neutral-800 bg-black/20 p-3">
+                  <p className="text-xs text-neutral-400">Key Insight</p>
+                  <p className="mt-1 text-sm text-neutral-200">
+                    Current observed model behavior is dominated by{" "}
+                    <span className="font-semibold text-white">cat71</span>.
+                    Standalone changes in cont1, cat1, cat89, and cat116 showed
+                    limited movement in the tested scenarios.
+                  </p>
+                </div>
               </div>
 
               <div className="text-sm text-neutral-300">{decisionSummary}</div>
-
-              <div className="text-sm text-yellow-400">{recommendation}</div>
 
               <div className="text-xs text-neutral-500">
                 Request ID: {prediction.request_id}
@@ -684,7 +845,98 @@ function ScoringPageContent() {
         </div>
       </section>
 
-      {/* Scenario Simulation Layer */}
+      {prediction && (
+        <section className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="text-sm text-cyan-300">Model Behavior Insight</p>
+              <h2 className="mt-1 text-2xl font-semibold text-white">
+                Driver Sensitivity Analysis
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-neutral-100">
+                This layer summarizes the observed feature sensitivity pattern
+                from manual scoring tests and highlights the dominant driver that
+                materially shifts the model output.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
+              Primary driver identified
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <p className="text-xs uppercase tracking-wide text-neutral-500">
+                Primary Driver
+              </p>
+              <p className="mt-2 text-lg font-semibold text-white">
+                {driverInsight.primary}
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <p className="text-xs uppercase tracking-wide text-neutral-500">
+                Secondary Drivers
+              </p>
+              <p className="mt-2 text-lg font-semibold text-white">
+                {driverInsight.secondary.join(", ")}
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <p className="text-xs uppercase tracking-wide text-neutral-500">
+                Weak Drivers
+              </p>
+              <p className="mt-2 text-lg font-semibold text-white">
+                {driverInsight.weak.join(", ")}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl border border-neutral-800 bg-black/30 p-5">
+            <p className="text-xs uppercase tracking-wide text-neutral-500">
+              Sensitivity Narrative
+            </p>
+            <p className="mt-3 text-sm leading-6 text-neutral-200">
+              {driverInsight.narrative}
+            </p>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button
+              onClick={() => {
+                setSimCont1(cont1 || "15000");
+                setSimCat1(normalizeCategory(cat1 || "A"));
+                setSimCat71("B");
+                setSimCat89(cat89 || "A");
+                setSimCat116(cat116 || "A");
+                setSimPrediction(null);
+                setSimError("");
+              }}
+              className="rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500"
+            >
+              Prepare Dominant Driver Simulation
+            </button>
+
+            <button
+              onClick={() => {
+                setSimCont1(cont1 || "15000");
+                setSimCat1(normalizeCategory(cat1 || "A"));
+                setSimCat71("B");
+                setSimCat89("B");
+                setSimCat116("B");
+                setSimPrediction(null);
+                setSimError("");
+              }}
+              className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+            >
+              Prepare Full Driver Stress
+            </button>
+          </div>
+        </section>
+      )}
+
       {prediction && (
         <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
           <div className="flex items-start justify-between gap-4">
@@ -695,6 +947,11 @@ function ScoringPageContent() {
               <h2 className="mt-1 text-2xl font-semibold text-white">
                 Scenario Simulation
               </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-neutral-400">
+                Start from the baseline scenario, then apply controlled input
+                changes to observe whether the system remains stable or reacts to
+                a meaningful driver shift.
+              </p>
             </div>
 
             <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
@@ -702,8 +959,73 @@ function ScoringPageContent() {
             </span>
           </div>
 
+          <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-5">
+            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+              <div>
+                <p className="text-sm text-neutral-400">Guided Scenario Actions</p>
+                <h3 className="mt-1 text-lg font-semibold text-white">
+                  Controlled Behavior Tests
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-neutral-400">
+                  Use these guided actions to demonstrate operational stability,
+                  dominant-driver sensitivity, and escalated stress behavior.
+                </p>
+              </div>
+
+              <span className="rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-300">
+                Guided flow
+              </span>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button
+                onClick={() => {
+                  setSimCont1(cont1 || "15000");
+                  setSimCat1(normalizeCategory(cat1 || "A"));
+                  setSimCat71(cat71 || "A");
+                  setSimCat89(cat89 || "A");
+                  setSimCat116(cat116 || "A");
+                  setSimPrediction(null);
+                  setSimError("");
+                }}
+                className="rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
+              >
+                Stability Check
+              </button>
+
+              <button
+                onClick={() => {
+                  setSimCont1(cont1 || "15000");
+                  setSimCat1(normalizeCategory(cat1 || "A"));
+                  setSimCat71("B");
+                  setSimCat89(cat89 || "A");
+                  setSimCat116(cat116 || "A");
+                  setSimPrediction(null);
+                  setSimError("");
+                }}
+                className="rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500"
+              >
+                Trigger Driver Shift
+              </button>
+
+              <button
+                onClick={() => {
+                  setSimCont1(String(Number(cont1 || 15000) * 2));
+                  setSimCat1("B");
+                  setSimCat71("B");
+                  setSimCat89("B");
+                  setSimCat116("B");
+                  setSimPrediction(null);
+                  setSimError("");
+                }}
+                className="rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-500"
+              >
+                Stress Scenario
+              </button>
+            </div>
+          </div>
+
           <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            {/* Simulation Input Panel */}
             <div className="space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-5">
               <div>
                 <p className="text-sm font-medium text-white">
@@ -733,7 +1055,6 @@ function ScoringPageContent() {
                 />
               </div>
 
-              {/* Added: simulated top driver controls */}
               <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -826,7 +1147,6 @@ function ScoringPageContent() {
               )}
             </div>
 
-            {/* Simulation Summary */}
             <div className="space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-5">
               <div>
                 <p className="text-sm text-neutral-400">Simulation Status</p>
@@ -873,16 +1193,33 @@ function ScoringPageContent() {
                     </p>
                     <div className="mt-3 space-y-2 text-sm text-neutral-300">
                       <p>
-                        Absolute Change:{" "}
+                        Baseline:{" "}
                         <span className="font-semibold text-white">
-                          {formatMetric(delta)}
+                          {formatMetric(prediction.prediction)}
+                        </span>
+                      </p>
+                      <p>
+                        Simulated:{" "}
+                        <span className="font-semibold text-white">
+                          {formatMetric(simPrediction.prediction)}
+                        </span>
+                      </p>
+                      <p>
+                        Change:{" "}
+                        <span className="font-semibold text-white">
+                          {typeof delta === "number"
+                            ? `${delta > 0 ? "+" : ""}${formatMetric(delta)}`
+                            : "Unavailable"}
+                        </span>{" "}
+                        <span className="text-neutral-400">
+                          ({predictionDeltaLabel})
                         </span>
                       </p>
                       <p>
                         Percentage Change:{" "}
                         <span className="font-semibold text-white">
                           {typeof percentageDelta === "number"
-                            ? `${percentageDelta.toFixed(2)}%`
+                            ? `${percentageDelta > 0 ? "+" : ""}${percentageDelta.toFixed(2)}%`
                             : "Unavailable"}
                         </span>
                       </p>
@@ -892,14 +1229,47 @@ function ScoringPageContent() {
                           {riskBand} → {simulatedRiskBand}
                         </span>
                       </p>
+                      <p>
+                        Driver Status:{" "}
+                        <span className="font-semibold text-white">
+                          {driverSensitivityStatus}
+                        </span>
+                      </p>
                     </div>
+                  </div>
+
+                  <div
+                    className={`rounded-xl border p-4 ${modelStabilitySignal.tone}`}
+                  >
+                    <p className="text-xs uppercase tracking-wide">
+                      Model Stability Signal
+                    </p>
+                    <p className="mt-2 text-base font-semibold">
+                      {modelStabilitySignal.label}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-neutral-100">
+                      {modelStabilitySignal.description}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-xl border p-4 ${driverImpactHighlight.tone}`}
+                  >
+                    <p className="text-xs uppercase tracking-wide">
+                      Driver Impact Highlight
+                    </p>
+                    <p className="mt-2 text-base font-semibold">
+                      {driverImpactHighlight.title}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-neutral-100">
+                      {driverImpactHighlight.description}
+                    </p>
                   </div>
                 </>
               )}
             </div>
           </div>
 
-          {/* Detailed Comparison */}
           {simPrediction && (
             <div className="mt-6 grid gap-6 xl:grid-cols-2">
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
@@ -962,7 +1332,6 @@ function ScoringPageContent() {
             </div>
           )}
 
-          {/* Counterfactual Intelligence Layer */}
           {simPrediction && (
             <div className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-6">
               <div className="flex items-start justify-between gap-4">
