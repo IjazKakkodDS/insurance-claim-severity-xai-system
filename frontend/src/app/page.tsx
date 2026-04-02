@@ -146,15 +146,69 @@ export default function OverviewPage() {
   );
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/health`)
-      .then((res) => res.json())
-      .then((data) => setStatus(data.status ?? "unknown"))
-      .catch(() => setStatus("error"));
+    let isMounted = true;
 
-    fetch(`${API_BASE_URL}/model-info`)
-      .then((res) => res.json())
-      .then((data) => setModelInfo(data))
-      .catch(() => setModelInfo(null));
+    const fetchOverviewData = async () => {
+      const healthController = new AbortController();
+      const modelController = new AbortController();
+
+      const healthTimeout = setTimeout(() => healthController.abort(), 8000);
+      const modelTimeout = setTimeout(() => modelController.abort(), 8000);
+
+      try {
+        const healthRes = await fetch(`${API_BASE_URL}/health`, {
+          signal: healthController.signal,
+        });
+
+        if (!healthRes.ok) {
+          throw new Error("Health endpoint returned a non-OK response.");
+        }
+
+        const healthData = await healthRes.json();
+
+        if (isMounted) {
+          setStatus(healthData.status ?? "unknown");
+        }
+      } catch (error) {
+        console.error("Overview health check failed:", error);
+
+        if (isMounted) {
+          setStatus("error");
+        }
+      } finally {
+        clearTimeout(healthTimeout);
+      }
+
+      try {
+        const modelRes = await fetch(`${API_BASE_URL}/model-info`, {
+          signal: modelController.signal,
+        });
+
+        if (!modelRes.ok) {
+          throw new Error("Model info endpoint returned a non-OK response.");
+        }
+
+        const modelData = await modelRes.json();
+
+        if (isMounted) {
+          setModelInfo(modelData);
+        }
+      } catch (error) {
+        console.error("Overview model info fetch failed:", error);
+
+        if (isMounted) {
+          setModelInfo(null);
+        }
+      } finally {
+        clearTimeout(modelTimeout);
+      }
+    };
+
+    fetchOverviewData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const healthTone =
@@ -162,7 +216,18 @@ export default function OverviewPage() {
       ? "text-green-400 border-green-500/30 bg-green-500/10"
       : status === "loading"
       ? "text-yellow-300 border-yellow-500/30 bg-yellow-500/10"
+      : status === "unknown"
+      ? "text-amber-300 border-amber-500/30 bg-amber-500/10"
       : "text-red-400 border-red-500/30 bg-red-500/10";
+
+  const healthLabel =
+    status === "ok"
+      ? "Operational"
+      : status === "loading"
+      ? "Loading"
+      : status === "unknown"
+      ? "Unknown"
+      : "Error";
 
   const activeStep = useMemo(
     () =>
@@ -197,7 +262,6 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <section className="flex flex-col gap-4 border-b border-neutral-800 pb-6 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
@@ -216,11 +280,10 @@ export default function OverviewPage() {
         <div
           className={`inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium ${healthTone}`}
         >
-          Backend Status: {status}
+          Backend Status: {healthLabel}
         </div>
       </section>
 
-      {/* Guided Story Mode */}
       <section className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-6">
         <div className="flex flex-col gap-4 border-b border-cyan-500/20 pb-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -378,7 +441,6 @@ export default function OverviewPage() {
         </div>
       </section>
 
-      {/* Guided Scenario Engine */}
       <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
         <div className="flex flex-col gap-4 border-b border-neutral-800 pb-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -391,9 +453,7 @@ export default function OverviewPage() {
             <p className="mt-3 max-w-3xl text-sm leading-6 text-neutral-400">
               This layer provides structured input configurations designed to
               surface distinct model behaviors, decision boundaries, and
-              explainability patterns. Each scenario represents a controlled
-              operational condition that can be used to observe how the system
-              responds under different input distributions.
+              explainability patterns across controlled operational conditions.
             </p>
           </div>
 
@@ -487,11 +547,12 @@ export default function OverviewPage() {
         </div>
       </section>
 
-      {/* KPI Cards */}
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
-          <p className="text-sm text-neutral-400">System Health</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">{status}</h2>
+          <p className="text-sm text-neutral-400">Platform Health</p>
+          <h2 className="mt-3 text-2xl font-semibold text-white">
+            {healthLabel}
+          </h2>
           <p className="mt-2 text-sm text-neutral-500">
             Live backend connectivity and API readiness.
           </p>
@@ -518,15 +579,14 @@ export default function OverviewPage() {
         </div>
 
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
-          <p className="text-sm text-neutral-400">Explainability</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">Enabled</h2>
+          <p className="text-sm text-neutral-400">Explainability Layer</p>
+          <h2 className="mt-3 text-2xl font-semibold text-white">Available</h2>
           <p className="mt-2 text-sm text-neutral-500">
-            SHAP-based feature attribution is available.
+            SHAP-based attribution is surfaced across the platform.
           </p>
         </div>
       </section>
 
-      {/* Main Detail Grid */}
       <section className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
           <div className="flex items-center justify-between">
@@ -547,7 +607,7 @@ export default function OverviewPage() {
               <p className="text-xs uppercase tracking-wide text-neutral-500">
                 Model Name
               </p>
-              <p className="mt-2 text-sm font-medium text-white break-words">
+              <p className="mt-2 break-words text-sm font-medium text-white">
                 {modelInfo?.active_model_name ?? "Unavailable"}
               </p>
             </div>
@@ -565,7 +625,7 @@ export default function OverviewPage() {
               <p className="text-xs uppercase tracking-wide text-neutral-500">
                 Run ID
               </p>
-              <p className="mt-2 text-sm font-medium text-white break-all">
+              <p className="mt-2 break-all text-sm font-medium text-white">
                 {modelInfo?.active_run_id ?? "Unavailable"}
               </p>
             </div>
@@ -578,6 +638,18 @@ export default function OverviewPage() {
                 {modelInfo?.version || "Not surfaced by backend"}
               </p>
             </div>
+          </div>
+
+          <div className="mt-6 rounded-xl border border-neutral-800 bg-black/30 p-4">
+            <p className="text-xs uppercase tracking-wide text-neutral-500">
+              Overview Interpretation
+            </p>
+            <p className="mt-2 text-sm leading-6 text-neutral-400">
+              This page acts as the platform entry layer, connecting live backend
+              readiness, active model metadata, guided scenario execution, and
+              downstream product flows across scoring, explainability, monitoring,
+              and governance.
+            </p>
           </div>
         </div>
 

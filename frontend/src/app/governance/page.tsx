@@ -35,6 +35,16 @@ type AuditRow = {
   outcome: string;
 };
 
+type GovernanceDecision = "Approved for Use" | "Conditional Review" | "Review Required";
+type DecisionPriority = "Low" | "Medium" | "High";
+
+type GovernanceChecklistItem = {
+  id: string;
+  title: string;
+  status: "Available" | "Partial" | "Pending";
+  description: string;
+};
+
 function getGovernanceStatus(stage?: string): GovernanceStatus {
   if (!stage) return "Unknown";
   if (stage === "Production") return "Healthy";
@@ -70,6 +80,42 @@ function getStageTone(stage?: string) {
   return "border border-neutral-700 bg-neutral-800 text-neutral-300";
 }
 
+function getChecklistTone(status: GovernanceChecklistItem["status"]) {
+  if (status === "Available") {
+    return "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300";
+  }
+
+  if (status === "Partial") {
+    return "border border-amber-500/20 bg-amber-500/10 text-amber-300";
+  }
+
+  return "border border-neutral-700 bg-neutral-800 text-neutral-300";
+}
+
+function getDecisionTone(decision: GovernanceDecision) {
+  if (decision === "Approved for Use") {
+    return "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300";
+  }
+
+  if (decision === "Conditional Review") {
+    return "border border-amber-500/20 bg-amber-500/10 text-amber-300";
+  }
+
+  return "border border-red-500/20 bg-red-500/10 text-red-300";
+}
+
+function getPriorityTone(priority: DecisionPriority) {
+  if (priority === "High") {
+    return "border border-red-500/20 bg-red-500/10 text-red-300";
+  }
+
+  if (priority === "Medium") {
+    return "border border-amber-500/20 bg-amber-500/10 text-amber-300";
+  }
+
+  return "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300";
+}
+
 function getLifecycleNarrative(modelInfo: ModelInfo | null) {
   if (!modelInfo) {
     return "Governance interpretation becomes available once model registry metadata is loaded.";
@@ -96,6 +142,46 @@ function getResponsibleAiNarrative(stage?: string) {
   }
 
   return "The responsible AI layer should remain attached to the model even before production, ensuring that validation, limitations, and governance assumptions are already documented.";
+}
+
+function getGovernanceDecision(
+  stage?: string
+): {
+  decision: GovernanceDecision;
+  priority: DecisionPriority;
+  rationale: string;
+  operatorNote: string;
+} {
+  if (stage === "Production") {
+    return {
+      decision: "Approved for Use",
+      priority: "Low",
+      rationale:
+        "The active registry pointer is currently surfaced as Production, which supports normal governed usage of the deployed model.",
+      operatorNote:
+        "Continue monitoring, maintain rollback readiness, and preserve audit visibility across future lifecycle changes.",
+    };
+  }
+
+  if (stage === "Staging") {
+    return {
+      decision: "Conditional Review",
+      priority: "Medium",
+      rationale:
+        "The model is surfaced in a review-oriented lifecycle state and should be treated as controlled but not fully release-final.",
+      operatorNote:
+        "Validate version metadata, sign-off assumptions, and readiness gates before any full production commitment.",
+    };
+  }
+
+  return {
+    decision: "Review Required",
+    priority: "High",
+    rationale:
+      "The current lifecycle metadata does not support a clean production governance interpretation.",
+    operatorNote:
+      "Treat this state as requiring governance review before relying on the model as a fully approved production artifact.",
+  };
 }
 
 export default function GovernancePage() {
@@ -129,8 +215,10 @@ export default function GovernancePage() {
   }, []);
 
   const governanceStatus = getGovernanceStatus(modelInfo?.stage);
+  const lifecycleNarrative = getLifecycleNarrative(modelInfo);
+  const responsibleAiNarrative = getResponsibleAiNarrative(modelInfo?.stage);
+  const governanceDecision = getGovernanceDecision(modelInfo?.stage);
 
-  // Added: static readiness/history surfaces for premium governance UI
   const versionHistory = useMemo<TimelineItem[]>(
     () => [
       {
@@ -173,7 +261,7 @@ export default function GovernancePage() {
         version: modelInfo?.version ?? "vCurrent",
         actor: "Governance Control",
         timestamp: "Current",
-        status: "Ready",
+        status: "Represented",
       },
       {
         id: "rb-2",
@@ -208,11 +296,11 @@ export default function GovernancePage() {
       },
       {
         id: "au-3",
-        action: "Rollback path verified",
+        action: "Rollback path surfaced",
         artifact: "Production pointer history",
         actor: "Governance Control",
         timestamp: "Readiness check",
-        outcome: "Prepared",
+        outcome: "Represented",
       },
       {
         id: "au-4",
@@ -226,12 +314,56 @@ export default function GovernancePage() {
     [modelInfo]
   );
 
-  const lifecycleNarrative = getLifecycleNarrative(modelInfo);
-  const responsibleAiNarrative = getResponsibleAiNarrative(modelInfo?.stage);
+  const governanceChecklist = useMemo<GovernanceChecklistItem[]>(
+    () => [
+      {
+        id: "gc-1",
+        title: "Registry metadata",
+        status: modelInfo?.active_model_name ? "Available" : "Pending",
+        description:
+          "Active model pointer, stage, run lineage, and version visibility should be surfaced to operators.",
+      },
+      {
+        id: "gc-2",
+        title: "Lifecycle control surface",
+        status: "Partial",
+        description:
+          "Promotion and rollback controls are represented at the UI layer and can later be wired to executable workflows.",
+      },
+      {
+        id: "gc-3",
+        title: "Audit visibility",
+        status: "Available",
+        description:
+          "Operator-facing audit summaries and action trace surfaces are represented in the governance interface.",
+      },
+      {
+        id: "gc-4",
+        title: "Responsible AI documentation",
+        status: "Available",
+        description:
+          "Model-card style summaries, intended use notes, risks, and limitations are visible within the page.",
+      },
+      {
+        id: "gc-5",
+        title: "Approval workflow wiring",
+        status: "Partial",
+        description:
+          "The UI supports governance storytelling, though full backend approval actions may still be extended later.",
+      },
+      {
+        id: "gc-6",
+        title: "Rollback evidence trail",
+        status: "Partial",
+        description:
+          "Recovery readiness is represented, but deeper event history can still be strengthened with fully live backend traces.",
+      },
+    ],
+    [modelInfo]
+  );
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
         <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
           Governance Center
@@ -245,7 +377,6 @@ export default function GovernancePage() {
         </p>
       </section>
 
-      {/* Loading / Error */}
       {isLoading && (
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
           <p className="text-sm text-neutral-300">
@@ -262,7 +393,6 @@ export default function GovernancePage() {
 
       {!isLoading && !error && (
         <>
-          {/* Top KPI Row */}
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Active Model</p>
@@ -297,10 +427,10 @@ export default function GovernancePage() {
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Responsible AI</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">
-                Documented
+                Available
               </h2>
               <p className="mt-2 text-sm text-neutral-500">
-                Governance artifacts and policy-ready documentation exist.
+                Responsible AI summaries are surfaced in the governance interface.
               </p>
             </div>
 
@@ -315,7 +445,6 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          {/* Added: governance signal band */}
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Approval State</p>
@@ -350,42 +479,88 @@ export default function GovernancePage() {
             </div>
 
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
-              <p className="text-sm text-neutral-400">Rollback Path</p>
+              <p className="text-sm text-neutral-400">Rollback Visibility</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">
-                Ready
+                Represented
               </h2>
               <p className="mt-2 text-sm text-neutral-500">
-                Prior pointer restoration logic is expected in the governance design.
+                Recovery path and prior pointer concepts are surfaced in the governance design.
               </p>
             </div>
 
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Audit Visibility</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">
-                Prepared
+                Available
               </h2>
               <p className="mt-2 text-sm text-neutral-500">
-                Operator-facing audit surfaces are now represented in the UI layer.
+                Operator-facing audit surfaces are represented in the UI layer.
               </p>
             </div>
           </section>
 
-          {/* Main Grid */}
-          <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-            {/* Metadata Panel */}
+          <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm text-neutral-400">Registry Metadata</p>
+                  <p className="text-sm text-neutral-400">Governance Decision Layer</p>
                   <h2 className="mt-1 text-2xl font-semibold text-white">
-                    Active Model Record
+                    Governance Decision
                   </h2>
                 </div>
 
-                <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
-                  Governance Tracked
+                <span
+                  className={`rounded-full border px-3 py-1 text-xs font-medium ${getDecisionTone(
+                    governanceDecision.decision
+                  )}`}
+                >
+                  {governanceDecision.decision}
                 </span>
               </div>
+
+              <div className="mt-6 grid gap-4">
+                <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
+                  <p className="text-xs uppercase tracking-wide text-neutral-500">
+                    Decision Basis
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-neutral-300">
+                    {governanceDecision.rationale}
+                  </p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-[180px_1fr]">
+                  <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500">
+                      Priority
+                    </p>
+                    <div className="mt-3">
+                      <span
+                        className={`rounded-full border px-3 py-1 text-xs font-medium ${getPriorityTone(
+                          governanceDecision.priority
+                        )}`}
+                      >
+                        {governanceDecision.priority}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500">
+                      Operator Note
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-neutral-300">
+                      {governanceDecision.operatorNote}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+              <p className="text-sm text-neutral-400">Registry Metadata</p>
+              <h2 className="mt-1 text-2xl font-semibold text-white">
+                Active Model Record
+              </h2>
 
               <div className="mt-6 grid gap-4 md:grid-cols-2">
                 <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
@@ -436,7 +611,6 @@ export default function GovernancePage() {
                 </p>
               </div>
 
-              {/* Added */}
               <div className="mt-6 rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Lifecycle Narrative
@@ -446,8 +620,9 @@ export default function GovernancePage() {
                 </p>
               </div>
             </div>
+          </section>
 
-            {/* Lifecycle / Controls Panel */}
+          <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
               <p className="text-sm text-neutral-400">Lifecycle Controls</p>
               <h2 className="mt-1 text-2xl font-semibold text-white">
@@ -461,7 +636,7 @@ export default function GovernancePage() {
                   </p>
                   <p className="mt-1 text-sm text-neutral-400">
                     Production stage assignment and controlled model promotion
-                    are supported in the backend lifecycle flow.
+                    are represented in the governance flow.
                   </p>
                 </div>
 
@@ -470,8 +645,8 @@ export default function GovernancePage() {
                     Rollback Readiness
                   </p>
                   <p className="mt-1 text-sm text-neutral-400">
-                    Rollback logic has been implemented to restore prior active
-                    production pointers when needed.
+                    Rollback logic is part of the lifecycle design, with recovery
+                    behavior represented through pointer-based governance concepts.
                   </p>
                 </div>
 
@@ -490,15 +665,56 @@ export default function GovernancePage() {
                     Auditability
                   </p>
                   <p className="mt-1 text-sm text-neutral-400">
-                    This interface is prepared to surface future audit logs,
+                    This interface is prepared to surface audit logs,
                     version history, model cards, and governance reports.
                   </p>
                 </div>
               </div>
             </div>
+
+            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm text-neutral-400">Compliance Layer</p>
+                  <h2 className="mt-1 text-2xl font-semibold text-white">
+                    Governance Checklist
+                  </h2>
+                </div>
+
+                <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+                  Reviewer View
+                </span>
+              </div>
+
+              <div className="mt-6 space-y-3">
+                {governanceChecklist.map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-xl border border-neutral-800 bg-black/30 p-4"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-white">{item.title}</p>
+                      </div>
+
+                      <span
+                        className={`rounded-full border px-3 py-1 text-xs font-medium ${getChecklistTone(
+                          item.status
+                        )}`}
+                      >
+                        {item.status}
+                      </span>
+                    </div>
+
+                    <p className="mt-3 text-sm leading-6 text-neutral-400">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </section>
 
-          {/* Action Layer */}
           <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -508,33 +724,35 @@ export default function GovernancePage() {
                 </h2>
               </div>
 
-              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                UI Ready
+              <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+                Demo Control Surface
               </span>
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <button
                 type="button"
-                className="rounded-xl border border-green-500/20 bg-green-500/10 px-5 py-4 text-left transition hover:bg-green-500/15"
+                disabled
+                className="cursor-not-allowed rounded-xl border border-green-500/20 bg-green-500/10 px-5 py-4 text-left opacity-80"
               >
                 <p className="text-sm font-semibold text-green-300">
                   Promote Model
                 </p>
                 <p className="mt-1 text-sm text-neutral-400">
-                  Lifecycle action surface for controlled stage promotion.
+                  Intended lifecycle action surface for controlled stage promotion.
                 </p>
               </button>
 
               <button
                 type="button"
-                className="rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-left transition hover:bg-red-500/15"
+                disabled
+                className="cursor-not-allowed rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-left opacity-80"
               >
                 <p className="text-sm font-semibold text-red-300">
                   Rollback Model
                 </p>
                 <p className="mt-1 text-sm text-neutral-400">
-                  Recovery control for restoring prior production pointers.
+                  Intended recovery surface for restoring prior production pointers.
                 </p>
               </button>
             </div>
@@ -544,20 +762,19 @@ export default function GovernancePage() {
                 Control Interpretation
               </p>
               <p className="mt-2 text-sm leading-6 text-neutral-400">
-                These controls currently represent the operator-facing layer of a
-                governed ML system and can later be wired to real promotion,
-                rollback, and approval workflows.
+                These controls intentionally represent the operator-facing layer of a
+                governed ML system. In this version of the product, they are displayed
+                as governance surfaces rather than live executable actions.
               </p>
             </div>
 
-            {/* Added */}
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Approval Workflow
                 </p>
                 <p className="mt-2 text-sm text-white">
-                  Reviewer sign-off layer prepared
+                  Reviewer sign-off layer represented
                 </p>
               </div>
 
@@ -581,7 +798,6 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          {/* Added: Version and rollback history */}
           <section className="grid gap-6 xl:grid-cols-2">
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
               <div className="flex items-start justify-between gap-4">
@@ -692,7 +908,6 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          {/* Responsible AI / Artifact Readiness */}
           <section className="grid gap-6 xl:grid-cols-3">
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
               <p className="text-sm text-neutral-400">Responsible AI</p>
@@ -730,7 +945,6 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          {/* Added: audit activity table */}
           <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -802,7 +1016,6 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          {/* Model Card Summary */}
           <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -875,7 +1088,6 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            {/* Added: fuller model card sections */}
             <div className="mt-6 grid gap-6 xl:grid-cols-2">
               <div className="space-y-4">
                 <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">

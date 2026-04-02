@@ -52,7 +52,6 @@ function formatMetric(value?: number) {
 
 function getRiskBand(prediction?: number) {
   if (typeof prediction !== "number") return "Unavailable";
-
   if (prediction < 30000) return "Low";
   if (prediction < 70000) return "Medium";
   return "High";
@@ -60,7 +59,6 @@ function getRiskBand(prediction?: number) {
 
 function getConfidence(prediction?: number) {
   if (typeof prediction !== "number") return "Unavailable";
-
   if (prediction < 30000) return "High Confidence";
   if (prediction < 70000) return "Moderate Confidence";
   return "Lower Confidence";
@@ -347,6 +345,22 @@ function getPredictionDeltaLabel(delta?: number) {
   if (delta === 0) return "No change";
   if (Math.abs(delta) < 5000) return "Minor shift";
   return "Significant shift";
+}
+
+function getRiskBandTone(riskBand?: string) {
+  if (riskBand === "High") {
+    return "border border-red-500/20 bg-red-500/10 text-red-300";
+  }
+
+  if (riskBand === "Medium") {
+    return "border border-amber-500/20 bg-amber-500/10 text-amber-300";
+  }
+
+  if (riskBand === "Low") {
+    return "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300";
+  }
+
+  return "border border-neutral-700 bg-neutral-800 text-neutral-300";
 }
 
 function ScoringPageContent() {
@@ -675,6 +689,10 @@ function ScoringPageContent() {
               <h2 className="mt-1 text-2xl font-semibold text-white">
                 Prediction Request Builder
               </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-400">
+                Construct a baseline request, submit it to the live scoring endpoint,
+                and use the result as the starting point for controlled counterfactual analysis.
+              </p>
             </div>
 
             <span className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
@@ -778,7 +796,7 @@ function ScoringPageContent() {
               }}
               className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
             >
-              Run High-Impact Setup
+              Prepare driver-sensitive setup
             </button>
           </div>
 
@@ -790,8 +808,21 @@ function ScoringPageContent() {
 
           {prediction && (
             <>
-              <div className="text-3xl font-bold text-white">
-                {formatMetric(prediction.prediction)}
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm text-neutral-400">Predicted Severity</p>
+                  <div className="mt-2 text-3xl font-bold text-white">
+                    {formatMetric(prediction.prediction)}
+                  </div>
+                </div>
+
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-medium ${getRiskBandTone(
+                    riskBand
+                  )}`}
+                >
+                  {riskBand}
+                </span>
               </div>
 
               <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-4">
@@ -916,7 +947,7 @@ function ScoringPageContent() {
               }}
               className="rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500"
             >
-              Prepare Dominant Driver Simulation
+              Prepare dominant-driver simulation
             </button>
 
             <button
@@ -931,7 +962,7 @@ function ScoringPageContent() {
               }}
               className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
             >
-              Prepare Full Driver Stress
+              Prepare full driver stress
             </button>
           </div>
         </section>
@@ -990,7 +1021,7 @@ function ScoringPageContent() {
                 }}
                 className="rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
               >
-                Stability Check
+                Stability check
               </button>
 
               <button
@@ -1005,7 +1036,7 @@ function ScoringPageContent() {
                 }}
                 className="rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500"
               >
-                Trigger Driver Shift
+                Trigger driver shift
               </button>
 
               <button
@@ -1020,7 +1051,7 @@ function ScoringPageContent() {
                 }}
                 className="rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-500"
               >
-                Stress Scenario
+                Stress scenario
               </button>
             </div>
           </div>
@@ -1138,7 +1169,7 @@ function ScoringPageContent() {
                   }}
                   className="rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
                 >
-                  Reset to Baseline
+                  Reset to baseline
                 </button>
               </div>
 

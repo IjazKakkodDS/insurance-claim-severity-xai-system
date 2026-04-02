@@ -220,6 +220,62 @@ function getDriverShiftBadge(featureDelta: FeatureDelta) {
   return "Stable";
 }
 
+// ─── Decision Intelligence Layer helpers ────────────────────────────────────
+
+function getDecisionAlignment(prediction?: number) {
+  if (typeof prediction !== "number") {
+    return "Decision alignment unavailable.";
+  }
+
+  if (prediction < 30000) {
+    return "Aligned with low-severity classification. No escalation expected.";
+  }
+
+  if (prediction < 70000) {
+    return "Aligned with medium-severity classification. Review recommended.";
+  }
+
+  return "Aligned with high-severity classification. Escalation likely required.";
+}
+
+function getDriverConsistency(
+  baselineTop?: string,
+  simulatedTop?: string
+) {
+  if (!baselineTop || !simulatedTop) {
+    return "Driver consistency unavailable.";
+  }
+
+  if (baselineTop === simulatedTop) {
+    return "Primary driver remains consistent across scenarios.";
+  }
+
+  return "Primary driver shifts under scenario changes, indicating model sensitivity.";
+}
+
+function getRiskAmplification(
+  baseline?: number,
+  simulated?: number
+) {
+  if (typeof baseline !== "number" || typeof simulated !== "number") {
+    return "Risk signal unavailable.";
+  }
+
+  const delta = simulated - baseline;
+
+  if (Math.abs(delta) < 1000) {
+    return "Low amplification — stable response.";
+  }
+
+  if (delta > 0) {
+    return "Risk amplification detected — upward pressure.";
+  }
+
+  return "Risk reduction detected — downward pressure.";
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+
 export default function ExplainabilityPage() {
   const [cont1, setCont1] = useState("");
   const [cat1, setCat1] = useState("");
@@ -478,6 +534,17 @@ export default function ExplainabilityPage() {
     flippedDrivers.length
   );
 
+  // Decision Intelligence Layer derived values
+  const decisionAlignment = getDecisionAlignment(result?.prediction);
+  const driverConsistency = getDriverConsistency(
+    rankedFeatures[0]?.feature,
+    simulatedRankedFeatures[0]?.feature
+  );
+  const riskAmplification = getRiskAmplification(
+    result?.prediction,
+    simResult?.prediction
+  );
+
   return (
     <div className="space-y-8">
       <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
@@ -734,6 +801,49 @@ export default function ExplainabilityPage() {
                   {whyThisMattersSummary}
                 </p>
               </div>
+
+              {/* ── Decision Intelligence Layer ── */}
+              <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-5">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs uppercase tracking-wide text-blue-300">
+                    Decision Intelligence Layer
+                  </p>
+                  <span className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
+                    System Link
+                  </span>
+                </div>
+
+                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                  <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500">
+                      Decision Alignment
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-neutral-300">
+                      {decisionAlignment}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500">
+                      Dominant Driver Stability
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-neutral-300">
+                      {driverConsistency}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500">
+                      Risk Amplification Signal
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-neutral-300">
+                      {riskAmplification}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {/* ── End Decision Intelligence Layer ── */}
+
             </div>
           )}
         </div>
@@ -898,11 +1008,11 @@ export default function ExplainabilityPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-neutral-300">
-                    Simulated Continuous Input
+                    Simulated cont1
                   </label>
                   <input
                     type="number"
-                    placeholder="Simulated cont1"
+                    placeholder="Enter simulated cont1"
                     value={simCont1}
                     onChange={(e) => setSimCont1(e.target.value)}
                     className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
@@ -911,11 +1021,11 @@ export default function ExplainabilityPage() {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-neutral-300">
-                    Simulated Categorical Input
+                    Simulated cat1
                   </label>
                   <input
                     type="text"
-                    placeholder="Simulated cat1"
+                    placeholder="Enter simulated cat1"
                     value={simCat1}
                     onChange={(e) => setSimCat1(e.target.value)}
                     className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
@@ -923,93 +1033,54 @@ export default function ExplainabilityPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm text-neutral-400">
-                      Top Driver Simulation Panel
-                    </p>
-                    <h3 className="mt-1 text-lg font-semibold text-white">
-                      Higher-Impact Counterfactual Controls
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-neutral-400">
-                      Adjust stronger driver fields directly so the explanation
-                      layer can show clearer attribution movement between
-                      baseline and simulation.
-                    </p>
-                  </div>
-
-                  <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
-                    Driver Shift
-                  </span>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-neutral-300">
+                    Simulated cat71
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter simulated cat71"
+                    value={simCat71}
+                    onChange={(e) => setSimCat71(e.target.value)}
+                    className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
+                  />
                 </div>
 
-                <div className="mt-5 grid gap-4 md:grid-cols-3">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-neutral-300">
-                      Simulated cat71
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Simulated cat71"
-                      value={simCat71}
-                      onChange={(e) => setSimCat71(e.target.value)}
-                      className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-neutral-300">
+                    Simulated cat89
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter simulated cat89"
+                    value={simCat89}
+                    onChange={(e) => setSimCat89(e.target.value)}
+                    className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
+                  />
+                </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-neutral-300">
-                      Simulated cat89
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Simulated cat89"
-                      value={simCat89}
-                      onChange={(e) => setSimCat89(e.target.value)}
-                      className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-neutral-300">
-                      Simulated cat116
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Simulated cat116"
-                      value={simCat116}
-                      onChange={(e) => setSimCat116(e.target.value)}
-                      className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-neutral-300">
+                    Simulated cat116
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter simulated cat116"
+                    value={simCat116}
+                    onChange={(e) => setSimCat116(e.target.value)}
+                    className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-neutral-600"
+                  />
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <button
                   onClick={handleSimulationExplain}
                   disabled={isSimLoading}
                   className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isSimLoading
-                    ? "Running simulated explanation..."
-                    : "Run Simulated Explanation"}
-                </button>
-
-                <button
-                  onClick={() => {
-                    setSimCont1(cont1);
-                    setSimCat1(cat1);
-                    setSimCat71(cat71);
-                    setSimCat89(cat89);
-                    setSimCat116(cat116);
-                    setSimResult(null);
-                    setSimError("");
-                  }}
-                  className="rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
-                >
-                  Reset to Baseline
+                  {isSimLoading ? "Running simulation..." : "Run Simulation"}
                 </button>
               </div>
 
@@ -1020,143 +1091,101 @@ export default function ExplainabilityPage() {
               )}
             </div>
 
-            <div className="space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-5">
-              <div>
-                <p className="text-sm text-neutral-400">Comparison Overview</p>
-                <h3 className="mt-1 text-xl font-semibold text-white">
-                  Prediction Shift Summary
-                </h3>
-              </div>
+            <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
+              <p className="text-sm font-medium text-white">
+                Simulation Output
+              </p>
 
-              {!simResult && (
-                <div className="rounded-xl border border-dashed border-neutral-800 bg-black/20 p-5">
-                  <p className="text-sm text-neutral-400">
-                    No simulated explanation has been generated yet. Adjust the
-                    scenario and run a second explanation request to compare
-                    baseline vs simulated feature behavior.
+              {!simResult && !isSimLoading && (
+                <div className="mt-4 rounded-xl border border-dashed border-neutral-800 bg-black/20 p-5">
+                  <p className="text-sm text-neutral-500">
+                    No simulation has been run yet. Adjust the inputs and run a
+                    simulation to compare against the baseline.
+                  </p>
+                </div>
+              )}
+
+              {isSimLoading && (
+                <div className="mt-4 rounded-xl border border-neutral-800 bg-black/20 p-5">
+                  <p className="text-sm text-neutral-300">
+                    Running simulation...
                   </p>
                 </div>
               )}
 
               {simResult && (
-                <>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4">
+                <div className="mt-4 space-y-4">
+                  <div className="rounded-xl border border-violet-500/20 bg-violet-500/10 p-4">
+                    <p className="text-xs uppercase tracking-wide text-violet-300">
+                      Simulated Predicted Severity
+                    </p>
+                    <p className="mt-2 text-3xl font-semibold text-white">
+                      {formatMetric(simResult.prediction)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500">
+                      Change Narrative
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-neutral-300">
+                      {changeNarrative}
+                    </p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                       <p className="text-xs uppercase tracking-wide text-neutral-500">
-                        Baseline Prediction
+                        Baseline prediction
                       </p>
                       <p className="mt-2 text-lg font-semibold text-white">
                         {formatMetric(result.prediction)}
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-violet-500/20 bg-violet-500/10 p-4">
-                      <p className="text-xs uppercase tracking-wide text-violet-300">
-                        Simulated Prediction
+                    <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                      <p className="text-xs uppercase tracking-wide text-neutral-500">
+                        Simulated prediction
                       </p>
                       <p className="mt-2 text-lg font-semibold text-white">
                         {formatMetric(simResult.prediction)}
                       </p>
                     </div>
-                  </div>
 
-                  <div className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4">
-                    <p className="text-xs uppercase tracking-wide text-neutral-500">
-                      Change Narrative
-                    </p>
-                    <p className="mt-3 text-sm leading-6 text-neutral-300">
-                      {changeNarrative}
-                    </p>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
                     <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                       <p className="text-xs uppercase tracking-wide text-neutral-500">
-                        Changed Drivers
+                        Top positive drivers
                       </p>
                       <p className="mt-2 text-lg font-semibold text-white">
-                        {featureDeltas.length}
+                        {simulatedPositiveFeatures.length}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                       <p className="text-xs uppercase tracking-wide text-neutral-500">
-                        Direction Flips
+                        Top negative drivers
                       </p>
                       <p className="mt-2 text-lg font-semibold text-white">
-                        {flippedDrivers.length}
+                        {simulatedNegativeFeatures.length}
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                      <p className="text-xs uppercase tracking-wide text-neutral-500">
+                        Top surfaced feature
+                      </p>
+                      <p className="mt-2 break-all text-sm font-semibold text-white">
+                        {simulatedRankedFeatures[0]?.feature ?? "Unavailable"}
                       </p>
                     </div>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>
 
           {simResult && (
             <>
-              <div className="mt-6 grid gap-6 xl:grid-cols-2">
-                <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
-                  <p className="text-sm text-neutral-400">
-                    Baseline Driver Mix
-                  </p>
-                  <h3 className="mt-1 text-xl font-semibold text-white">
-                    Current Explanation
-                  </h3>
-
-                  <div className="mt-4 space-y-3">
-                    <div className="text-sm text-neutral-400">
-                      Top positive drivers:{" "}
-                      <span className="font-semibold text-white">
-                        {positiveFeatures.length}
-                      </span>
-                    </div>
-                    <div className="text-sm text-neutral-400">
-                      Top negative drivers:{" "}
-                      <span className="font-semibold text-white">
-                        {negativeFeatures.length}
-                      </span>
-                    </div>
-                    <div className="text-sm text-neutral-300">
-                      Top surfaced feature:{" "}
-                      <span className="font-semibold text-white">
-                        {rankedFeatures[0]?.feature ?? "Unavailable"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-violet-500/20 bg-violet-500/10 p-5">
-                  <p className="text-sm text-violet-300">
-                    Simulated Driver Mix
-                  </p>
-                  <h3 className="mt-1 text-xl font-semibold text-white">
-                    Counterfactual Explanation
-                  </h3>
-
-                  <div className="mt-4 space-y-3">
-                    <div className="text-sm text-neutral-100">
-                      Top positive drivers:{" "}
-                      <span className="font-semibold text-white">
-                        {simulatedPositiveFeatures.length}
-                      </span>
-                    </div>
-                    <div className="text-sm text-neutral-100">
-                      Top negative drivers:{" "}
-                      <span className="font-semibold text-white">
-                        {simulatedNegativeFeatures.length}
-                      </span>
-                    </div>
-                    <div className="text-sm text-neutral-100">
-                      Top surfaced feature:{" "}
-                      <span className="font-semibold text-white">
-                        {simulatedRankedFeatures[0]?.feature ?? "Unavailable"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-6">
                 <p className="text-sm text-neutral-400">Contribution Delta</p>
                 <h3 className="mt-1 text-2xl font-semibold text-white">
