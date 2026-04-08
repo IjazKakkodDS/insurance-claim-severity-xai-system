@@ -848,9 +848,7 @@ function ChartShell({
   return (
     <div className={`mt-6 w-full min-w-0 ${heightClass}`}>
       <div className="h-full w-full min-w-0 rounded-xl border border-neutral-800 bg-black/20 p-2">
-        <div className="h-full w-full min-w-0">
-          {children}
-        </div>
+        <div className="h-full w-full min-w-0">{children}</div>
       </div>
     </div>
   );
@@ -1005,12 +1003,12 @@ export default function MonitoringPage() {
   }, [recentPredictions]);
 
   return (
-    <div className="w-full min-w-0 space-y-8">
+    <div className="w-full min-w-0 space-y-6 sm:space-y-8">
       <section className="flex min-w-0 flex-col gap-3 border-b border-neutral-800 pb-6">
-        <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
           Observability Center
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           Monitoring Dashboard
         </h1>
         <p className="max-w-3xl text-sm leading-6 text-neutral-400">
@@ -1020,7 +1018,7 @@ export default function MonitoringPage() {
       </section>
 
       {isLoading && (
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
           <p className="text-sm text-neutral-300">
             Loading monitoring metrics from the observability endpoint...
           </p>
@@ -1028,24 +1026,24 @@ export default function MonitoringPage() {
       )}
 
       {error && (
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-sm text-red-300">
+        <div className="min-w-0 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300 sm:p-6">
           {error}
         </div>
       )}
 
       {!isLoading && !error && distribution && (
         <>
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Model Health Layer</p>
-                <h2 className="mt-1 text-2xl font-semibold text-white">
+                <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   Current Health Summary
                 </h2>
               </div>
 
               <span
-                className={`rounded-full px-3 py-1 text-xs font-medium ${
+                className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${
                   driftSeverity === "Critical"
                     ? "border border-red-500/20 bg-red-500/10 text-red-300"
                     : driftSeverity === "High"
@@ -1059,7 +1057,7 @@ export default function MonitoringPage() {
               </span>
             </div>
 
-            <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Executive Summary
@@ -1080,11 +1078,11 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Executive Scoring Layer</p>
-                <h2 className="mt-1 text-2xl font-semibold text-white">
+                <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   Model Stability Score
                 </h2>
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-neutral-300">
@@ -1095,20 +1093,20 @@ export default function MonitoringPage() {
               </div>
 
               <span
-                className={`rounded-full px-3 py-1 text-xs font-medium ${stabilityTone.badge}`}
+                className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${stabilityTone.badge}`}
               >
                 {stability.level} · {stability.score}/100
               </span>
             </div>
 
-            <div className="mt-6 grid gap-6 xl:grid-cols-[260px_1fr]">
+            <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-[260px_1fr]">
               <div
                 className={`rounded-xl border bg-black/30 p-5 ${stabilityTone.ring}`}
               >
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Stability Index
                 </p>
-                <p className="mt-3 text-5xl font-semibold text-white">
+                <p className="mt-3 text-4xl font-semibold text-white sm:text-5xl">
                   {stability.score}
                 </p>
                 <p className="mt-2 text-sm text-neutral-400">
@@ -1185,20 +1183,20 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+          <section className="grid min-w-0 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">
                     Operational Action Layer
                   </p>
-                  <h2 className="mt-1 text-2xl font-semibold text-white">
+                  <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                     Recommended Action
                   </h2>
                 </div>
 
                 <span
-                  className={`rounded-full border px-3 py-1 text-xs font-medium ${getPriorityTone(
+                  className={`w-fit rounded-full border px-3 py-1 text-xs font-medium ${getPriorityTone(
                     recommendedAction.priority
                   )}`}
                 >
@@ -1247,19 +1245,19 @@ export default function MonitoringPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">
                     Escalation Decision Layer
                   </p>
-                  <h2 className="mt-1 text-2xl font-semibold text-white">
+                  <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                     Escalation Decision
                   </h2>
                 </div>
 
                 <span
-                  className={`rounded-full border px-3 py-1 text-xs font-medium ${getDecisionTone(
+                  className={`w-fit rounded-full border px-3 py-1 text-xs font-medium ${getDecisionTone(
                     escalationOutcome.decision
                   )}`}
                 >
@@ -1289,17 +1287,17 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Drift Breakdown Layer</p>
-                <h2 className="mt-1 text-2xl font-semibold text-white">
+                <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   Drift Breakdown
                 </h2>
               </div>
 
               <span
-                className={`rounded-full border px-3 py-1 text-xs font-medium ${getConfidenceTone(
+                className={`w-fit rounded-full border px-3 py-1 text-xs font-medium ${getConfidenceTone(
                   driftBreakdown.confidence
                 )}`}
               >
@@ -1345,7 +1343,7 @@ export default function MonitoringPage() {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+            <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-[0.95fr_1.05fr]">
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Primary Drift Driver
@@ -1370,18 +1368,18 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">
                   Monitoring Event Layer
                 </p>
-                <h2 className="mt-1 text-2xl font-semibold text-white">
+                <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   Monitoring Timeline
                 </h2>
               </div>
 
-              <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+              <span className="w-fit rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
                 Recent Change Events
               </span>
             </div>
@@ -1393,14 +1391,14 @@ export default function MonitoringPage() {
                   className="rounded-xl border border-neutral-800 bg-black/30 p-5"
                 >
                   <div className="flex items-start justify-between gap-4">
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-medium text-white">
                         {event.title}
                       </p>
                     </div>
 
                     <span
-                      className={`rounded-full border px-3 py-1 text-xs font-medium ${getTimelineTone(
+                      className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${getTimelineTone(
                         event.severity
                       )}`}
                     >
@@ -1439,7 +1437,7 @@ export default function MonitoringPage() {
 
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Prediction Range</p>
-              <h2 className="mt-3 text-3xl font-semibold text-white">
+              <h2 className="mt-3 break-words text-3xl font-semibold text-white">
                 {typeof distribution.min_prediction === "number" &&
                 typeof distribution.max_prediction === "number"
                   ? `${formatMetric(distribution.min_prediction)} — ${formatMetric(
@@ -1515,17 +1513,17 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Operator Alert Layer</p>
-                <h2 className="mt-1 text-2xl font-semibold text-white">
+                <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   Monitoring Alert State
                 </h2>
               </div>
 
               <span
-                className={`rounded-full px-3 py-1 text-xs font-medium ${
+                className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${
                   driftSeverity === "Critical"
                     ? "border border-red-500/20 bg-red-500/10 text-red-300"
                     : driftSeverity === "High"
@@ -1539,7 +1537,7 @@ export default function MonitoringPage() {
               </span>
             </div>
 
-            <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Alert Summary
@@ -1563,9 +1561,9 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
             <p className="text-sm text-neutral-400">Prediction Distribution</p>
-            <h2 className="mt-1 text-2xl font-semibold text-white">
+            <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
               Output Trend Visualization
             </h2>
 
@@ -1576,7 +1574,10 @@ export default function MonitoringPage() {
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+                  >
                     <XAxis dataKey="name" stroke="#888" />
                     <YAxis stroke="#888" />
                     <Tooltip />
@@ -1603,9 +1604,9 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
             <p className="text-sm text-neutral-400">Trend Intelligence</p>
-            <h2 className="mt-1 text-2xl font-semibold text-white">
+            <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
               Sequential Prediction Movement
             </h2>
 
@@ -1618,7 +1619,7 @@ export default function MonitoringPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
                     data={chartData}
-                    margin={{ top: 8, right: 24, left: 8, bottom: 8 }}
+                    margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
                     <XAxis dataKey="name" stroke="#888" />
@@ -1684,9 +1685,9 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
             <p className="text-sm text-neutral-400">Insight Engine</p>
-            <h2 className="mt-1 text-2xl font-semibold text-white">
+            <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
               Monitoring Insights
             </h2>
 
@@ -1702,10 +1703,10 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="grid gap-6 xl:grid-cols-2">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+          <section className="grid min-w-0 gap-6 xl:grid-cols-2">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Observability Summary</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Behavioral Interpretation
               </h2>
 
@@ -1760,9 +1761,9 @@ export default function MonitoringPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Operator Review</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Observability Checklist
               </h2>
 
@@ -1785,23 +1786,23 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">
                   Cross-Page Monitoring Link
                 </p>
-                <h2 className="mt-1 text-2xl font-semibold text-white">
+                <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   Driver-Level Monitoring Context
                 </h2>
               </div>
 
-              <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+              <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
                 Connected Insight
               </span>
             </div>
 
-            <div className="mt-6 grid gap-4 xl:grid-cols-2">
+            <div className="mt-6 grid min-w-0 gap-4 xl:grid-cols-2">
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Monitoring Interpretation
@@ -1829,19 +1830,19 @@ export default function MonitoringPage() {
             </div>
           </section>
 
-          <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+          <section className="grid min-w-0 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">
                     Distribution Metrics
                   </p>
-                  <h2 className="mt-1 text-2xl font-semibold text-white">
+                  <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                     Prediction Summary
                   </h2>
                 </div>
 
-                <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+                <span className="w-fit rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
                   Live Monitoring
                 </span>
               </div>
@@ -1914,14 +1915,14 @@ export default function MonitoringPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Recent Activity</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Prediction Feed
               </h2>
 
               {recentPredictions.length === 0 ? (
-                <div className="mt-6 rounded-xl border border-dashed border-neutral-800 bg-black/20 p-6">
+                <div className="mt-6 rounded-xl border border-dashed border-neutral-800 bg-black/20 p-5 sm:p-6">
                   <p className="text-sm text-neutral-400">
                     No recent predictions are available yet.
                   </p>
@@ -1934,7 +1935,7 @@ export default function MonitoringPage() {
                       className="rounded-xl border border-neutral-800 bg-black/30 p-4"
                     >
                       <div className="flex items-center justify-between gap-4">
-                        <div>
+                        <div className="min-w-0">
                           <p className="text-xs uppercase tracking-wide text-neutral-500">
                             Prediction #{index + 1}
                           </p>
@@ -1943,7 +1944,7 @@ export default function MonitoringPage() {
                           </p>
                         </div>
 
-                        <span className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300">
+                        <span className="shrink-0 rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300">
                           Logged
                         </span>
                       </div>
