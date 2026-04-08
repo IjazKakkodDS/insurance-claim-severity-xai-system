@@ -363,12 +363,12 @@ export default function GovernancePage() {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
       <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
-        <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
           Governance Center
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           Model Governance
         </h1>
         <p className="max-w-3xl text-sm leading-6 text-neutral-400">
@@ -378,7 +378,7 @@ export default function GovernancePage() {
       </section>
 
       {isLoading && (
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
           <p className="text-sm text-neutral-300">
             Loading governance metadata from the active model registry endpoint...
           </p>
@@ -386,15 +386,16 @@ export default function GovernancePage() {
       )}
 
       {error && (
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-sm text-red-300">
+        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300 sm:p-6">
           {error}
         </div>
       )}
 
       {!isLoading && !error && (
         <>
+          {/* Top KPI cards */}
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Active Model</p>
               <h2 className="mt-3 break-words text-2xl font-semibold text-white">
                 {modelInfo?.active_model_name ?? "Unavailable"}
@@ -404,9 +405,9 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Lifecycle Stage</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">
+              <h2 className="mt-3 break-words text-2xl font-semibold text-white">
                 {modelInfo?.stage ?? "Unavailable"}
               </h2>
               <p className="mt-2 text-sm text-neutral-500">
@@ -414,9 +415,9 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Registry Version</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">
+              <h2 className="mt-3 break-words text-2xl font-semibold text-white">
                 {modelInfo?.version || "Not surfaced"}
               </h2>
               <p className="mt-2 text-sm text-neutral-500">
@@ -424,7 +425,7 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Responsible AI</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">
                 Available
@@ -434,7 +435,7 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Governance Status</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">
                 {governanceStatus}
@@ -445,12 +446,13 @@ export default function GovernancePage() {
             </div>
           </section>
 
+          {/* Approval / lifecycle cards */}
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Approval State</p>
               <div className="mt-3">
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusTone(
+                  className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${getStatusTone(
                     governanceStatus
                   )}`}
                 >
@@ -462,11 +464,11 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Lifecycle Readiness</p>
               <div className="mt-3">
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${getStageTone(
+                  className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${getStageTone(
                     modelInfo?.stage
                   )}`}
                 >
@@ -478,7 +480,7 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Rollback Visibility</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">
                 Represented
@@ -488,7 +490,7 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
               <p className="text-sm text-neutral-400">Audit Visibility</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">
                 Available
@@ -499,10 +501,11 @@ export default function GovernancePage() {
             </div>
           </section>
 
+          {/* Governance decision section */}
           <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">Governance Decision Layer</p>
                   <h2 className="mt-1 text-2xl font-semibold text-white">
                     Governance Decision
@@ -510,7 +513,7 @@ export default function GovernancePage() {
                 </div>
 
                 <span
-                  className={`rounded-full border px-3 py-1 text-xs font-medium ${getDecisionTone(
+                  className={`w-fit rounded-full border px-3 py-1 text-xs font-medium ${getDecisionTone(
                     governanceDecision.decision
                   )}`}
                 >
@@ -535,7 +538,7 @@ export default function GovernancePage() {
                     </p>
                     <div className="mt-3">
                       <span
-                        className={`rounded-full border px-3 py-1 text-xs font-medium ${getPriorityTone(
+                        className={`w-fit rounded-full border px-3 py-1 text-xs font-medium ${getPriorityTone(
                           governanceDecision.priority
                         )}`}
                       >
@@ -556,14 +559,15 @@ export default function GovernancePage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+            {/* Registry metadata section */}
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Registry Metadata</p>
               <h2 className="mt-1 text-2xl font-semibold text-white">
                 Active Model Record
               </h2>
 
               <div className="mt-6 grid gap-4 md:grid-cols-2">
-                <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
                   <p className="text-xs uppercase tracking-wide text-neutral-500">
                     Model Name
                   </p>
@@ -572,16 +576,16 @@ export default function GovernancePage() {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+                <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
                   <p className="text-xs uppercase tracking-wide text-neutral-500">
                     Stage
                   </p>
-                  <p className="mt-2 text-sm font-medium text-white">
+                  <p className="mt-2 break-words text-sm font-medium text-white">
                     {modelInfo?.stage ?? "Unavailable"}
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
+                <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
                   <p className="text-xs uppercase tracking-wide text-neutral-500">
                     Run ID
                   </p>
@@ -590,11 +594,11 @@ export default function GovernancePage() {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
+                <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
                   <p className="text-xs uppercase tracking-wide text-neutral-500">
                     Version
                   </p>
-                  <p className="mt-2 text-sm font-medium text-white">
+                  <p className="mt-2 break-words text-sm font-medium text-white">
                     {modelInfo?.version || "Not surfaced by backend"}
                   </p>
                 </div>
@@ -622,8 +626,9 @@ export default function GovernancePage() {
             </div>
           </section>
 
+          {/* Lifecycle signals + governance checklist */}
           <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Lifecycle Controls</p>
               <h2 className="mt-1 text-2xl font-semibold text-white">
                 Governance Signals
@@ -672,16 +677,16 @@ export default function GovernancePage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">Compliance Layer</p>
                   <h2 className="mt-1 text-2xl font-semibold text-white">
                     Governance Checklist
                   </h2>
                 </div>
 
-                <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+                <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
                   Reviewer View
                 </span>
               </div>
@@ -692,13 +697,13 @@ export default function GovernancePage() {
                     key={item.id}
                     className="rounded-xl border border-neutral-800 bg-black/30 p-4"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                      <div className="min-w-0">
                         <p className="text-sm font-medium text-white">{item.title}</p>
                       </div>
 
                       <span
-                        className={`rounded-full border px-3 py-1 text-xs font-medium ${getChecklistTone(
+                        className={`w-fit rounded-full border px-3 py-1 text-xs font-medium ${getChecklistTone(
                           item.status
                         )}`}
                       >
@@ -715,21 +720,22 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          {/* Operator controls */}
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Action Layer</p>
                 <h2 className="mt-1 text-2xl font-semibold text-white">
                   Operator Controls
                 </h2>
               </div>
 
-              <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+              <span className="w-fit rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
                 Demo Control Surface
               </span>
             </div>
 
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <button
                 type="button"
                 disabled
@@ -768,7 +774,7 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Approval Workflow
@@ -798,17 +804,18 @@ export default function GovernancePage() {
             </div>
           </section>
 
+          {/* Version history + rollback history */}
           <section className="grid gap-6 xl:grid-cols-2">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">Version History</p>
                   <h2 className="mt-1 text-2xl font-semibold text-white">
                     Lifecycle Timeline
                   </h2>
                 </div>
 
-                <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+                <span className="w-fit rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
                   History
                 </span>
               </div>
@@ -819,9 +826,9 @@ export default function GovernancePage() {
                     key={item.id}
                     className="rounded-xl border border-neutral-800 bg-black/30 p-4"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-sm font-medium text-white">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                      <div className="min-w-0">
+                        <p className="break-words text-sm font-medium text-white">
                           {item.event}
                         </p>
                         <p className="mt-1 text-sm text-neutral-400">
@@ -829,12 +836,12 @@ export default function GovernancePage() {
                         </p>
                       </div>
 
-                      <span className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300">
+                      <span className="w-fit rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300">
                         {item.status}
                       </span>
                     </div>
 
-                    <div className="mt-3 grid gap-3 md:grid-cols-2">
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <div className="text-sm text-neutral-400">
                         Stage:{" "}
                         <span className="font-semibold text-white">
@@ -843,7 +850,7 @@ export default function GovernancePage() {
                       </div>
                       <div className="text-sm text-neutral-400">
                         Version:{" "}
-                        <span className="font-semibold text-white">
+                        <span className="break-words font-semibold text-white">
                           {item.version}
                         </span>
                       </div>
@@ -853,16 +860,16 @@ export default function GovernancePage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">Rollback History</p>
                   <h2 className="mt-1 text-2xl font-semibold text-white">
                     Recovery Readiness
                   </h2>
                 </div>
 
-                <span className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300">
+                <span className="w-fit rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300">
                   Recovery
                 </span>
               </div>
@@ -873,9 +880,9 @@ export default function GovernancePage() {
                     key={item.id}
                     className="rounded-xl border border-neutral-800 bg-black/30 p-4"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-sm font-medium text-white">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                      <div className="min-w-0">
+                        <p className="break-words text-sm font-medium text-white">
                           {item.event}
                         </p>
                         <p className="mt-1 text-sm text-neutral-400">
@@ -883,12 +890,12 @@ export default function GovernancePage() {
                         </p>
                       </div>
 
-                      <span className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300">
+                      <span className="w-fit rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300">
                         {item.status}
                       </span>
                     </div>
 
-                    <div className="mt-3 grid gap-3 md:grid-cols-2">
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <div className="text-sm text-neutral-400">
                         Stage:{" "}
                         <span className="font-semibold text-white">
@@ -897,7 +904,7 @@ export default function GovernancePage() {
                       </div>
                       <div className="text-sm text-neutral-400">
                         Version:{" "}
-                        <span className="font-semibold text-white">
+                        <span className="break-words font-semibold text-white">
                           {item.version}
                         </span>
                       </div>
@@ -908,8 +915,9 @@ export default function GovernancePage() {
             </div>
           </section>
 
+          {/* Responsible AI / model card sections */}
           <section className="grid gap-6 xl:grid-cols-3">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Responsible AI</p>
               <h2 className="mt-1 text-xl font-semibold text-white">
                 Fairness & Risk Framing
@@ -921,7 +929,7 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Model Card Readiness</p>
               <h2 className="mt-1 text-xl font-semibold text-white">
                 Documentation Layer
@@ -932,7 +940,7 @@ export default function GovernancePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+            <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
               <p className="text-sm text-neutral-400">Future Integration</p>
               <h2 className="mt-1 text-xl font-semibold text-white">
                 Audit & Version Timeline
@@ -945,16 +953,17 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          {/* Audit activity table */}
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Audit Layer</p>
                 <h2 className="mt-1 text-2xl font-semibold text-white">
                   Audit Activity Table
                 </h2>
               </div>
 
-              <span className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
+              <span className="w-fit rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
                 Audit Ready
               </span>
             </div>
@@ -1016,22 +1025,23 @@ export default function GovernancePage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          {/* Model card summary snapshot */}
+          <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Model Card</p>
                 <h2 className="mt-1 text-2xl font-semibold text-white">
                   Summary Snapshot
                 </h2>
               </div>
 
-              <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+              <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
                 Responsible AI
               </span>
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-              <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Intended Use
                 </p>
@@ -1040,7 +1050,7 @@ export default function GovernancePage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Risk Profile
                 </p>
@@ -1049,7 +1059,7 @@ export default function GovernancePage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Monitoring
                 </p>
@@ -1058,7 +1068,7 @@ export default function GovernancePage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Explainability
                 </p>
@@ -1067,7 +1077,7 @@ export default function GovernancePage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+              <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Key Limitation
                 </p>
@@ -1089,7 +1099,7 @@ export default function GovernancePage() {
             </div>
 
             <div className="mt-6 grid gap-6 xl:grid-cols-2">
-              <div className="space-y-4">
+              <div className="min-w-0 space-y-4">
                 <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                   <p className="text-xs uppercase tracking-wide text-neutral-500">
                     Intended Use
@@ -1124,7 +1134,7 @@ export default function GovernancePage() {
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="min-w-0 space-y-4">
                 <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                   <p className="text-xs uppercase tracking-wide text-neutral-500">
                     Fairness Considerations
