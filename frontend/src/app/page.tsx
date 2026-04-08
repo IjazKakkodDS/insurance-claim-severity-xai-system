@@ -261,13 +261,14 @@ export default function OverviewPage() {
   const walkthroughScenario = getScenarioById(activeStep.scenarioId);
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
+      {/* Hero / header section */}
       <section className="flex flex-col gap-4 border-b border-neutral-800 pb-6 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+        <div className="min-w-0">
+          <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
             Enterprise ML Platform
           </p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white">
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
             Claim Severity Intelligence Platform
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-neutral-400">
@@ -278,19 +279,20 @@ export default function OverviewPage() {
         </div>
 
         <div
-          className={`inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium ${healthTone}`}
+          className={`w-fit inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium ${healthTone}`}
         >
           Backend Status: {healthLabel}
         </div>
       </section>
 
-      <section className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-6">
+      {/* Guided Product Walkthrough section */}
+      <section className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4 sm:p-6">
         <div className="flex flex-col gap-4 border-b border-cyan-500/20 pb-5 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.2em] text-cyan-300 sm:text-sm">
               Guided Product Walkthrough
             </p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               Interactive decision intelligence sequence
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-neutral-100">
@@ -300,12 +302,13 @@ export default function OverviewPage() {
             </p>
           </div>
 
-          <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium text-cyan-200">
+          <div className="w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium text-cyan-200">
             Story Mode Enabled
           </div>
         </div>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+          {/* Walkthrough step selector cards */}
           <div className="space-y-3">
             {WALKTHROUGH_STEPS.map((step) => {
               const isActive = activeWalkthroughStep === step.id;
@@ -315,7 +318,7 @@ export default function OverviewPage() {
                   key={step.id}
                   type="button"
                   onClick={() => setActiveWalkthroughStep(step.id)}
-                  className={`w-full rounded-2xl border p-4 text-left transition ${
+                  className={`w-full min-w-0 rounded-2xl border p-4 text-left transition ${
                     isActive
                       ? "border-cyan-400/30 bg-cyan-400/10"
                       : "border-neutral-800 bg-black/30 hover:border-neutral-700 hover:bg-black/40"
@@ -339,16 +342,17 @@ export default function OverviewPage() {
             })}
           </div>
 
-          <div className="rounded-2xl border border-neutral-800 bg-black/30 p-5">
-            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-              <div>
+          {/* Active walkthrough detail panel */}
+          <div className="min-w-0 rounded-2xl border border-neutral-800 bg-black/30 p-4 sm:p-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-cyan-300">{activeStep.stepLabel}</p>
-                <h3 className="mt-1 text-2xl font-semibold text-white">
+                <h3 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   {activeStep.title}
                 </h3>
               </div>
 
-              <span className="rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-300">
+              <span className="w-fit rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-300">
                 Guided execution flow
               </span>
             </div>
@@ -410,7 +414,8 @@ export default function OverviewPage() {
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            {/* Walkthrough action buttons — stack on mobile, row on sm+ */}
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={() => handleWalkthroughLaunch(activeStep)}
@@ -441,13 +446,14 @@ export default function OverviewPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-        <div className="flex flex-col gap-4 border-b border-neutral-800 pb-5 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+      {/* Predefined operational scenarios section */}
+      <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+        <div className="flex flex-col gap-4 border-b border-neutral-800 pb-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
               Scenario Intelligence Layer
             </p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               Predefined operational scenarios
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-neutral-400">
@@ -457,7 +463,7 @@ export default function OverviewPage() {
             </p>
           </div>
 
-          <div className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-xs font-medium text-cyan-300">
+          <div className="w-fit rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-xs font-medium text-cyan-300">
             Scenario Engine
           </div>
         </div>
@@ -468,10 +474,10 @@ export default function OverviewPage() {
               key={scenario.id}
               type="button"
               onClick={() => handleScenarioLaunch(scenario)}
-              className="rounded-2xl border border-neutral-800 bg-black/30 p-5 text-left transition hover:border-neutral-700 hover:bg-black/40"
+              className="min-w-0 rounded-2xl border border-neutral-800 bg-black/30 p-4 text-left transition hover:border-neutral-700 hover:bg-black/40 sm:p-5"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                <div className="min-w-0">
                   <p className="text-lg font-semibold text-white">
                     {scenario.title}
                   </p>
@@ -481,13 +487,14 @@ export default function OverviewPage() {
                 </div>
 
                 <span
-                  className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${scenario.tone}`}
+                  className={`w-fit shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${scenario.tone}`}
                 >
                   {scenario.badge}
                 </span>
               </div>
 
-              <div className="mt-5 grid gap-3 md:grid-cols-5">
+              {/* Mini parameter cards — 2-col on mobile, 3-col on sm, 5-col on md+ */}
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
                 <div className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-3">
                   <p className="text-[11px] uppercase tracking-wide text-neutral-500">
                     cont1
@@ -534,7 +541,7 @@ export default function OverviewPage() {
                 </div>
               </div>
 
-              <div className="mt-5 flex items-center justify-between rounded-xl border border-neutral-800 bg-neutral-950/40 px-4 py-3">
+              <div className="mt-5 flex flex-col gap-2 rounded-xl border border-neutral-800 bg-neutral-950/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-neutral-400">
                   Route this scenario into the scoring workspace for evaluation.
                 </p>
@@ -547,8 +554,9 @@ export default function OverviewPage() {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
+      {/* KPI summary cards — 1 col mobile, 2 tablet, 4 large */}
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
           <p className="text-sm text-neutral-400">Platform Health</p>
           <h2 className="mt-3 text-2xl font-semibold text-white">
             {healthLabel}
@@ -558,9 +566,9 @@ export default function OverviewPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
           <p className="text-sm text-neutral-400">Active Stage</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">
+          <h2 className="mt-3 break-words text-2xl font-semibold text-white">
             {modelInfo?.stage ?? "Unavailable"}
           </h2>
           <p className="mt-2 text-sm text-neutral-500">
@@ -568,9 +576,9 @@ export default function OverviewPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
           <p className="text-sm text-neutral-400">Registry Version</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">
+          <h2 className="mt-3 break-words text-2xl font-semibold text-white">
             {modelInfo?.version || "Not surfaced"}
           </h2>
           <p className="mt-2 text-sm text-neutral-500">
@@ -578,7 +586,7 @@ export default function OverviewPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-sm">
           <p className="text-sm text-neutral-400">Explainability Layer</p>
           <h2 className="mt-3 text-2xl font-semibold text-white">Available</h2>
           <p className="mt-2 text-sm text-neutral-500">
@@ -587,23 +595,24 @@ export default function OverviewPage() {
         </div>
       </section>
 
+      {/* Active model metadata + platform summary */}
       <section className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-neutral-400">Active Model</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 break-words text-2xl font-semibold text-white">
                 {modelInfo?.active_model_name ?? "Unavailable"}
               </h2>
             </div>
 
-            <span className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs font-medium text-neutral-300">
+            <span className="w-fit rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs font-medium text-neutral-300">
               Production Pointer
             </span>
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+            <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
               <p className="text-xs uppercase tracking-wide text-neutral-500">
                 Model Name
               </p>
@@ -612,16 +621,16 @@ export default function OverviewPage() {
               </p>
             </div>
 
-            <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
+            <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4">
               <p className="text-xs uppercase tracking-wide text-neutral-500">
                 Stage
               </p>
-              <p className="mt-2 text-sm font-medium text-white">
+              <p className="mt-2 break-words text-sm font-medium text-white">
                 {modelInfo?.stage ?? "Unavailable"}
               </p>
             </div>
 
-            <div className="rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
+            <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
               <p className="text-xs uppercase tracking-wide text-neutral-500">
                 Run ID
               </p>
@@ -630,11 +639,11 @@ export default function OverviewPage() {
               </p>
             </div>
 
-            <div className="rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
+            <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4 md:col-span-2">
               <p className="text-xs uppercase tracking-wide text-neutral-500">
                 Version
               </p>
-              <p className="mt-2 text-sm font-medium text-white">
+              <p className="mt-2 break-words text-sm font-medium text-white">
                 {modelInfo?.version || "Not surfaced by backend"}
               </p>
             </div>
@@ -653,7 +662,8 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+        {/* Platform summary / operational capabilities */}
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
           <p className="text-sm text-neutral-400">Platform Summary</p>
           <h2 className="mt-2 text-2xl font-semibold text-white">
             Operational Capabilities
