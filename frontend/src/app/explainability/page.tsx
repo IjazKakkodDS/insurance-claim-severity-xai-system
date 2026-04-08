@@ -534,7 +534,6 @@ export default function ExplainabilityPage() {
     flippedDrivers.length
   );
 
-  // Decision Intelligence Layer derived values
   const decisionAlignment = getDecisionAlignment(result?.prediction);
   const driverConsistency = getDriverConsistency(
     rankedFeatures[0]?.feature,
@@ -546,12 +545,12 @@ export default function ExplainabilityPage() {
   );
 
   return (
-    <div className="space-y-8">
-      <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
-        <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
+      <section className="flex min-w-0 flex-col gap-3 border-b border-neutral-800 pb-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
           Explainability Workbench
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           Model Explainability
         </h1>
         <p className="max-w-3xl text-sm leading-6 text-neutral-400">
@@ -560,22 +559,22 @@ export default function ExplainabilityPage() {
         </p>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+      <section className="grid min-w-0 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-neutral-400">Input Scenario</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Explanation Request Builder
               </h2>
             </div>
 
-            <span className="rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs font-medium text-green-300">
+            <span className="w-fit rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs font-medium text-green-300">
               SHAP Enabled
             </span>
           </div>
 
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 sm:gap-5 md:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-medium text-neutral-300">
                 Continuous Input
@@ -609,9 +608,9 @@ export default function ExplainabilityPage() {
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-4 sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Top Driver Controls</p>
                 <h3 className="mt-1 text-lg font-semibold text-white">
                   Higher-Impact Feature Inputs
@@ -623,7 +622,7 @@ export default function ExplainabilityPage() {
                 </p>
               </div>
 
-              <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+              <span className="w-fit rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
                 Extended Inputs
               </span>
             </div>
@@ -670,11 +669,11 @@ export default function ExplainabilityPage() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <button
               onClick={handleExplain}
               disabled={isLoading}
-              className="rounded-xl bg-green-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-xl bg-green-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {isLoading ? "Generating explanation..." : "Generate Explanation"}
             </button>
@@ -696,7 +695,7 @@ export default function ExplainabilityPage() {
                 setSimResult(null);
                 setSimError("");
               }}
-              className="rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
+              className="w-full rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white sm:w-auto"
             >
               Reset Inputs
             </button>
@@ -709,14 +708,14 @@ export default function ExplainabilityPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
           <p className="text-sm text-neutral-400">Prediction Summary</p>
-          <h2 className="mt-1 text-2xl font-semibold text-white">
+          <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
             Explainability Output
           </h2>
 
           {!result && !isLoading && !error && (
-            <div className="mt-6 rounded-xl border border-dashed border-neutral-800 bg-black/20 p-6">
+            <div className="mt-6 rounded-xl border border-dashed border-neutral-800 bg-black/20 p-5 sm:p-6">
               <p className="text-sm text-neutral-400">
                 No explanation has been generated yet. Submit an input scenario
                 to retrieve the live prediction and ranked feature
@@ -726,7 +725,7 @@ export default function ExplainabilityPage() {
           )}
 
           {isLoading && (
-            <div className="mt-6 rounded-xl border border-neutral-800 bg-black/20 p-6">
+            <div className="mt-6 rounded-xl border border-neutral-800 bg-black/20 p-5 sm:p-6">
               <p className="text-sm text-neutral-300">
                 Running explainability service and computing feature attributions...
               </p>
@@ -735,11 +734,11 @@ export default function ExplainabilityPage() {
 
           {result && (
             <div className="mt-6 space-y-4">
-              <div className="rounded-xl border border-green-500/20 bg-green-500/10 p-5">
+              <div className="rounded-xl border border-green-500/20 bg-green-500/10 p-4 sm:p-5">
                 <p className="text-xs uppercase tracking-wide text-green-300">
                   Predicted Severity
                 </p>
-                <p className="mt-3 text-4xl font-semibold text-white">
+                <p className="mt-3 break-words text-3xl font-semibold text-white sm:text-4xl">
                   {formatMetric(result.prediction)}
                 </p>
               </div>
@@ -802,13 +801,12 @@ export default function ExplainabilityPage() {
                 </p>
               </div>
 
-              {/* ── Decision Intelligence Layer ── */}
-              <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-5">
-                <div className="flex items-center justify-between">
+              <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4 sm:p-5">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs uppercase tracking-wide text-blue-300">
                     Decision Intelligence Layer
                   </p>
-                  <span className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
+                  <span className="w-fit rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
                     System Link
                   </span>
                 </div>
@@ -842,20 +840,18 @@ export default function ExplainabilityPage() {
                   </div>
                 </div>
               </div>
-              {/* ── End Decision Intelligence Layer ── */}
-
             </div>
           )}
         </div>
       </section>
 
-      <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+      <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
         <p className="text-sm text-neutral-400">Visual Attribution</p>
-        <h2 className="mt-1 text-2xl font-semibold text-white">
+        <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
           Top Feature Contributions
         </h2>
 
-        <div className="mt-6 h-[380px]">
+        <div className="mt-6 h-[320px] sm:h-[380px]">
           {chartData.length === 0 ? (
             <div className="flex h-full items-center justify-center text-sm text-neutral-500">
               No feature contributions available for visualization.
@@ -865,14 +861,14 @@ export default function ExplainabilityPage() {
               <BarChart
                 data={chartData}
                 layout="vertical"
-                margin={{ top: 8, right: 24, left: 40, bottom: 8 }}
+                margin={{ top: 8, right: 12, left: 8, bottom: 8 }}
               >
                 <XAxis type="number" stroke="#888" />
                 <YAxis
                   type="category"
                   dataKey="feature"
                   stroke="#888"
-                  width={180}
+                  width={110}
                 />
                 <Tooltip
                   formatter={(value) => renderTooltipValue(value)}
@@ -894,16 +890,16 @@ export default function ExplainabilityPage() {
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-          <div className="flex items-center justify-between">
-            <div>
+      <section className="grid min-w-0 gap-6 xl:grid-cols-2">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-neutral-400">Positive Drivers</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Upward Contributions
               </h2>
             </div>
-            <span className="rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs font-medium text-green-300">
+            <span className="w-fit rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs font-medium text-green-300">
               Positive
             </span>
           </div>
@@ -933,15 +929,15 @@ export default function ExplainabilityPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-neutral-400">Negative Drivers</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Downward Contributions
               </h2>
             </div>
-            <span className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300">
+            <span className="w-fit rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300">
               Negative
             </span>
           </div>
@@ -973,13 +969,13 @@ export default function ExplainabilityPage() {
       </section>
 
       {result && (
-        <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+        <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-neutral-400">
                 Counterfactual Explainability
               </p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Before vs After Explanation Comparison
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-neutral-400">
@@ -988,14 +984,14 @@ export default function ExplainabilityPage() {
               </p>
             </div>
 
-            <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+            <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
               Simulation Enabled
             </span>
           </div>
 
-          <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-5">
-              <div>
+          <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="min-w-0 space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-4 sm:p-5">
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-white">
                   Simulated Input Scenario
                 </p>
@@ -1074,11 +1070,11 @@ export default function ExplainabilityPage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <button
                   onClick={handleSimulationExplain}
                   disabled={isSimLoading}
-                  className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
                   {isSimLoading ? "Running simulation..." : "Run Simulation"}
                 </button>
@@ -1091,7 +1087,7 @@ export default function ExplainabilityPage() {
               )}
             </div>
 
-            <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
+            <div className="min-w-0 rounded-xl border border-neutral-800 bg-black/30 p-4 sm:p-5">
               <p className="text-sm font-medium text-white">
                 Simulation Output
               </p>
@@ -1119,7 +1115,7 @@ export default function ExplainabilityPage() {
                     <p className="text-xs uppercase tracking-wide text-violet-300">
                       Simulated Predicted Severity
                     </p>
-                    <p className="mt-2 text-3xl font-semibold text-white">
+                    <p className="mt-2 break-words text-2xl font-semibold text-white sm:text-3xl">
                       {formatMetric(simResult.prediction)}
                     </p>
                   </div>
@@ -1186,13 +1182,13 @@ export default function ExplainabilityPage() {
 
           {simResult && (
             <>
-              <div className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-6">
+              <div className="mt-6 min-w-0 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-4 sm:p-6">
                 <p className="text-sm text-neutral-400">Contribution Delta</p>
-                <h3 className="mt-1 text-2xl font-semibold text-white">
+                <h3 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                   Top Changed Drivers
                 </h3>
 
-                <div className="mt-6 h-[380px]">
+                <div className="mt-6 h-[320px] sm:h-[380px]">
                   {topChangedChartData.length === 0 ? (
                     <div className="flex h-full items-center justify-center text-sm text-neutral-500">
                       No changed driver contributions available for visualization.
@@ -1202,14 +1198,14 @@ export default function ExplainabilityPage() {
                       <BarChart
                         data={topChangedChartData}
                         layout="vertical"
-                        margin={{ top: 8, right: 24, left: 40, bottom: 8 }}
+                        margin={{ top: 8, right: 12, left: 8, bottom: 8 }}
                       >
                         <XAxis type="number" stroke="#888" />
                         <YAxis
                           type="category"
                           dataKey="feature"
                           stroke="#888"
-                          width={180}
+                          width={110}
                         />
                         <Tooltip
                           formatter={(value) => renderTooltipValue(value)}
@@ -1231,7 +1227,7 @@ export default function ExplainabilityPage() {
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-6 xl:grid-cols-2">
+              <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-2">
                 <div className="rounded-xl border border-neutral-800 bg-black/30 p-5">
                   <p className="text-xs uppercase tracking-wide text-neutral-500">
                     What Changed
@@ -1253,16 +1249,16 @@ export default function ExplainabilityPage() {
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-6 xl:grid-cols-2">
-                <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
+              <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-2">
+                <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="min-w-0">
                       <p className="text-sm text-neutral-400">Changed Drivers</p>
-                      <h2 className="mt-1 text-2xl font-semibold text-white">
+                      <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                         Largest Attribution Shifts
                       </h2>
                     </div>
-                    <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+                    <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
                       Delta
                     </span>
                   </div>
@@ -1317,15 +1313,15 @@ export default function ExplainabilityPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
+                <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="min-w-0">
                       <p className="text-sm text-neutral-400">Directional Shift</p>
-                      <h2 className="mt-1 text-2xl font-semibold text-white">
+                      <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                         Sign-Flipped Features
                       </h2>
                     </div>
-                    <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
+                    <span className="w-fit rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
                       Flip
                     </span>
                   </div>
