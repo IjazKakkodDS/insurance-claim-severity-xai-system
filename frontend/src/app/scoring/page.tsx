@@ -280,7 +280,7 @@ function getModelStabilitySignal(delta?: number) {
     label: "Sensitivity detected",
     description:
       "The tested change produced a material response, indicating that the model is reacting to a meaningful driver shift.",
-    tone: "border-red-500/20 bg-red-500/10 text-red-300",
+      tone: "border-red-500/20 bg-red-500/10 text-red-300",
   };
 }
 
@@ -336,7 +336,7 @@ function getDriverImpactHighlight(
     title: "Material response observed",
     description:
       "The tested adjustment produced a meaningful output shift and should be interpreted as an operationally relevant sensitivity event.",
-    tone: "border-red-500/20 bg-red-500/10 text-red-300",
+      tone: "border-red-500/20 bg-red-500/10 text-red-300",
   };
 }
 
@@ -645,12 +645,12 @@ function ScoringPageContent() {
   const predictionDeltaLabel = getPredictionDeltaLabel(delta);
 
   return (
-    <div className="space-y-8">
-      <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
-        <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
+      <section className="flex min-w-0 flex-col gap-3 border-b border-neutral-800 pb-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
           Scoring Console
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           Claim Severity Scoring
         </h1>
         <p className="max-w-3xl text-sm leading-6 text-neutral-400">
@@ -660,9 +660,9 @@ function ScoringPageContent() {
       </section>
 
       {loadedScenarioId && (
-        <section className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-5">
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <div>
+        <section className="min-w-0 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4 sm:p-5">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-cyan-300">
                 Scenario context loaded
               </p>
@@ -674,19 +674,19 @@ function ScoringPageContent() {
               </p>
             </div>
 
-            <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
+            <span className="w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
               {loadedScenarioId}
             </span>
           </div>
         </section>
       )}
 
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+      <section className="grid min-w-0 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-neutral-400">Input Scenario</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Prediction Request Builder
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-400">
@@ -695,18 +695,18 @@ function ScoringPageContent() {
               </p>
             </div>
 
-            <span className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
+            <span className="w-fit rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
               Live API
             </span>
           </div>
 
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 sm:gap-5 md:grid-cols-2">
             <input
               type="number"
               placeholder="Enter cont1"
               value={cont1}
               onChange={(e) => setCont1(e.target.value)}
-              className="rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
+              className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
             />
 
             <input
@@ -714,13 +714,13 @@ function ScoringPageContent() {
               placeholder='Enter cat1 (e.g. "A")'
               value={cat1}
               onChange={(e) => setCat1(e.target.value)}
-              className="rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
+              className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
             />
           </div>
 
-          <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-4 sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Top Driver Controls</p>
                 <h3 className="mt-1 text-lg font-semibold text-white">
                   Higher-Impact Feature Inputs
@@ -732,7 +732,7 @@ function ScoringPageContent() {
                 </p>
               </div>
 
-              <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+              <span className="w-fit rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
                 Extended Inputs
               </span>
             </div>
@@ -779,11 +779,11 @@ function ScoringPageContent() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <button
               onClick={handleSubmit}
               disabled={isLoading}
-              className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white"
+              className="w-full rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white sm:w-auto"
             >
               {isLoading ? "Running..." : "Generate Prediction"}
             </button>
@@ -794,7 +794,7 @@ function ScoringPageContent() {
                 setCat89(cat89 || "A");
                 setCat116(cat116 || "A");
               }}
-              className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+              className="w-full rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20 sm:w-auto"
             >
               Prepare driver-sensitive setup
             </button>
@@ -803,21 +803,21 @@ function ScoringPageContent() {
           {error && <div className="mt-5 text-sm text-red-400">{error}</div>}
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6 space-y-4">
+        <div className="min-w-0 space-y-4 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
           {!prediction && <p className="text-neutral-500">No prediction yet.</p>}
 
           {prediction && (
             <>
-              <div className="flex items-start justify-between gap-4">
-                <div>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">Predicted Severity</p>
-                  <div className="mt-2 text-3xl font-bold text-white">
+                  <div className="mt-2 break-words text-2xl font-bold text-white sm:text-3xl">
                     {formatMetric(prediction.prediction)}
                   </div>
                 </div>
 
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${getRiskBandTone(
+                  className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${getRiskBandTone(
                     riskBand
                   )}`}
                 >
@@ -825,7 +825,7 @@ function ScoringPageContent() {
                 </span>
               </div>
 
-              <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-4">
+              <div className="min-w-0 rounded-xl border border-blue-500/20 bg-blue-500/10 p-4">
                 <p className="text-xs uppercase tracking-wide text-blue-300">
                   Executive Decision Summary
                 </p>
@@ -868,7 +868,7 @@ function ScoringPageContent() {
 
               <div className="text-sm text-neutral-300">{decisionSummary}</div>
 
-              <div className="text-xs text-neutral-500">
+              <div className="break-all text-xs text-neutral-500">
                 Request ID: {prediction.request_id}
               </div>
             </>
@@ -877,11 +877,11 @@ function ScoringPageContent() {
       </section>
 
       {prediction && (
-        <section className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-6">
+        <section className="min-w-0 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4 sm:p-6">
           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm text-cyan-300">Model Behavior Insight</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Driver Sensitivity Analysis
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-neutral-100">
@@ -891,7 +891,7 @@ function ScoringPageContent() {
               </p>
             </div>
 
-            <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
+            <span className="w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
               Primary driver identified
             </span>
           </div>
@@ -934,7 +934,7 @@ function ScoringPageContent() {
             </p>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <button
               onClick={() => {
                 setSimCont1(cont1 || "15000");
@@ -945,7 +945,7 @@ function ScoringPageContent() {
                 setSimPrediction(null);
                 setSimError("");
               }}
-              className="rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500"
+              className="w-full rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500 sm:w-auto"
             >
               Prepare dominant-driver simulation
             </button>
@@ -960,7 +960,7 @@ function ScoringPageContent() {
                 setSimPrediction(null);
                 setSimError("");
               }}
-              className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+              className="w-full rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20 sm:w-auto"
             >
               Prepare full driver stress
             </button>
@@ -969,13 +969,13 @@ function ScoringPageContent() {
       )}
 
       {prediction && (
-        <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+        <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-neutral-400">
                 Counterfactual Workspace
               </p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">
+              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                 Scenario Simulation
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-neutral-400">
@@ -985,14 +985,14 @@ function ScoringPageContent() {
               </p>
             </div>
 
-            <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+            <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
               What-if Analysis
             </span>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-5">
+          <div className="mt-6 rounded-2xl border border-neutral-800 bg-black/20 p-4 sm:p-5">
             <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Guided Scenario Actions</p>
                 <h3 className="mt-1 text-lg font-semibold text-white">
                   Controlled Behavior Tests
@@ -1003,12 +1003,12 @@ function ScoringPageContent() {
                 </p>
               </div>
 
-              <span className="rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-300">
+              <span className="w-fit rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-300">
                 Guided flow
               </span>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <button
                 onClick={() => {
                   setSimCont1(cont1 || "15000");
@@ -1019,7 +1019,7 @@ function ScoringPageContent() {
                   setSimPrediction(null);
                   setSimError("");
                 }}
-                className="rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
+                className="w-full rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white sm:w-auto"
               >
                 Stability check
               </button>
@@ -1034,7 +1034,7 @@ function ScoringPageContent() {
                   setSimPrediction(null);
                   setSimError("");
                 }}
-                className="rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500"
+                className="w-full rounded-xl bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500 sm:w-auto"
               >
                 Trigger driver shift
               </button>
@@ -1049,16 +1049,16 @@ function ScoringPageContent() {
                   setSimPrediction(null);
                   setSimError("");
                 }}
-                className="rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-500"
+                className="w-full rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-500 sm:w-auto"
               >
                 Stress scenario
               </button>
             </div>
           </div>
 
-          <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-5">
-              <div>
+          <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="min-w-0 space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-4 sm:p-5">
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-white">
                   Simulated Input Scenario
                 </p>
@@ -1074,7 +1074,7 @@ function ScoringPageContent() {
                   placeholder="Simulated cont1"
                   value={simCont1}
                   onChange={(e) => setSimCont1(e.target.value)}
-                  className="rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
+                  className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
                 />
 
                 <input
@@ -1082,13 +1082,13 @@ function ScoringPageContent() {
                   placeholder='Simulated cat1 (e.g. "A")'
                   value={simCat1}
                   onChange={(e) => setSimCat1(e.target.value)}
-                  className="rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
+                  className="w-full rounded-xl border border-neutral-800 bg-black/40 px-4 py-3 text-white"
                 />
               </div>
 
-              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-4 sm:p-5">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
                     <p className="text-sm text-neutral-400">
                       Top Driver Simulation Panel
                     </p>
@@ -1101,7 +1101,7 @@ function ScoringPageContent() {
                     </p>
                   </div>
 
-                  <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+                  <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
                     Driver Shift
                   </span>
                 </div>
@@ -1148,11 +1148,11 @@ function ScoringPageContent() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <button
                   onClick={handleSimulation}
                   disabled={isSimLoading}
-                  className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white"
+                  className="w-full rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white sm:w-auto"
                 >
                   {isSimLoading ? "Running simulation..." : "Run Simulation"}
                 </button>
@@ -1167,7 +1167,7 @@ function ScoringPageContent() {
                     setSimPrediction(null);
                     setSimError("");
                   }}
-                  className="rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
+                  className="w-full rounded-xl border border-neutral-700 bg-transparent px-5 py-3 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white sm:w-auto"
                 >
                   Reset to baseline
                 </button>
@@ -1178,8 +1178,8 @@ function ScoringPageContent() {
               )}
             </div>
 
-            <div className="space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-5">
-              <div>
+            <div className="min-w-0 space-y-4 rounded-xl border border-neutral-800 bg-black/30 p-4 sm:p-5">
+              <div className="min-w-0">
                 <p className="text-sm text-neutral-400">Simulation Status</p>
                 <h3 className="mt-1 text-xl font-semibold text-white">
                   Comparison Overview
@@ -1198,7 +1198,7 @@ function ScoringPageContent() {
 
               {simPrediction && (
                 <>
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <div className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4">
                       <p className="text-xs uppercase tracking-wide text-neutral-500">
                         Baseline Prediction
@@ -1364,13 +1364,13 @@ function ScoringPageContent() {
           )}
 
           {simPrediction && (
-            <div className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+            <div className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm text-neutral-400">
                     Counterfactual Intelligence
                   </p>
-                  <h3 className="mt-1 text-2xl font-semibold text-white">
+                  <h3 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
                     Decision Intelligence Summary
                   </h3>
                   <p className="mt-2 max-w-3xl text-sm leading-6 text-neutral-400">
@@ -1381,7 +1381,7 @@ function ScoringPageContent() {
                 </div>
 
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${
                     decisionImpact === "Improvement"
                       ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
                       : decisionImpact === "Deterioration"
@@ -1490,12 +1490,12 @@ function ScoringPageContent() {
 
 function ScoringPageFallback() {
   return (
-    <div className="space-y-8">
-      <section className="flex flex-col gap-3 border-b border-neutral-800 pb-6">
-        <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
+      <section className="flex min-w-0 flex-col gap-3 border-b border-neutral-800 pb-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
           Scoring Console
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           Claim Severity Scoring
         </h1>
         <p className="max-w-3xl text-sm leading-6 text-neutral-400">
