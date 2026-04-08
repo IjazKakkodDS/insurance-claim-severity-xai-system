@@ -28,17 +28,17 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full bg-black text-white`}
     >
-      <body className="h-full">
-        <div className="flex h-full">
-
+      <body className="min-h-screen bg-black text-white">
+        <div className="flex min-h-screen bg-black">
           {/* Sidebar */}
           <Sidebar />
 
           {/* Main Content Area */}
-          <main className="flex-1 bg-neutral-950 p-6 overflow-auto">
-            <div className="max-w-7xl mx-auto">{children}</div>
+          <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-neutral-950">
+            <div className="mx-auto w-full max-w-7xl px-4 pb-6 pt-20 sm:px-6 sm:pb-8 md:pt-6 lg:px-8">
+              {children}
+            </div>
           </main>
-
         </div>
       </body>
     </html>
