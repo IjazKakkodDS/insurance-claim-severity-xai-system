@@ -790,7 +790,7 @@ function ScoringPageContent() {
 
             <button
               onClick={() => {
-                setCat71("B");
+                setCat71(cat71 || "A");
                 setCat89(cat89 || "A");
                 setCat116(cat116 || "A");
               }}
@@ -939,7 +939,7 @@ function ScoringPageContent() {
               onClick={() => {
                 setSimCont1(cont1 || "15000");
                 setSimCat1(normalizeCategory(cat1 || "A"));
-                setSimCat71("B");
+                setSimCat71(normalizeDriverValue(cat71 || "A") === "B" ? "A" : "B");
                 setSimCat89(cat89 || "A");
                 setSimCat116(cat116 || "A");
                 setSimPrediction(null);
@@ -954,7 +954,7 @@ function ScoringPageContent() {
               onClick={() => {
                 setSimCont1(cont1 || "15000");
                 setSimCat1(normalizeCategory(cat1 || "A"));
-                setSimCat71("B");
+                setSimCat71(normalizeDriverValue(cat71 || "A") === "B" ? "A" : "B");
                 setSimCat89("B");
                 setSimCat116("B");
                 setSimPrediction(null);
@@ -1028,7 +1028,7 @@ function ScoringPageContent() {
                 onClick={() => {
                   setSimCont1(cont1 || "15000");
                   setSimCat1(normalizeCategory(cat1 || "A"));
-                  setSimCat71("B");
+                  setSimCat71(normalizeDriverValue(cat71 || "A") === "B" ? "A" : "B");
                   setSimCat89(cat89 || "A");
                   setSimCat116(cat116 || "A");
                   setSimPrediction(null);
@@ -1043,7 +1043,7 @@ function ScoringPageContent() {
                 onClick={() => {
                   setSimCont1(String(Number(cont1 || 15000) * 2));
                   setSimCat1("B");
-                  setSimCat71("B");
+                  setSimCat71(normalizeDriverValue(cat71 || "A") === "B" ? "A" : "B");
                   setSimCat89("B");
                   setSimCat116("B");
                   setSimPrediction(null);

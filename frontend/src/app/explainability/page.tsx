@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/config";
 import {
   BarChart,
@@ -276,7 +277,10 @@ function getRiskAmplification(
 
 // ────────────────────────────────────────────────────────────────────────────
 
-export default function ExplainabilityPage() {
+function ExplainabilityPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [cont1, setCont1] = useState("");
   const [cat1, setCat1] = useState("");
   const [cat71, setCat71] = useState("");
@@ -296,6 +300,38 @@ export default function ExplainabilityPage() {
   const [simResult, setSimResult] = useState<ExplainResponse | null>(null);
   const [isSimLoading, setIsSimLoading] = useState(false);
   const [simError, setSimError] = useState("");
+
+  const [hasPrefilledFromUrl, setHasPrefilledFromUrl] = useState(false);
+  const [hasAutoExecuted, setHasAutoExecuted] = useState(false);
+  const [loadedScenarioId, setLoadedScenarioId] = useState("");
+
+  useEffect(() => {
+    if (hasPrefilledFromUrl) return;
+
+    const urlCont1 = searchParams.get("cont1");
+    const urlCat1 = searchParams.get("cat1");
+    const urlCat71 = searchParams.get("cat71");
+    const urlCat89 = searchParams.get("cat89");
+    const urlCat116 = searchParams.get("cat116");
+    const urlScenarioId = searchParams.get("demoScenario");
+
+    const hasScenarioInput =
+      urlCont1 || urlCat1 || urlCat71 || urlCat89 || urlCat116 || urlScenarioId;
+
+    if (!hasScenarioInput) {
+      setHasPrefilledFromUrl(true);
+      return;
+    }
+
+    if (urlCont1) setCont1(urlCont1);
+    if (urlCat1) setCat1(urlCat1.trim().toUpperCase());
+    if (urlCat71) setCat71(urlCat71.trim());
+    if (urlCat89) setCat89(urlCat89.trim());
+    if (urlCat116) setCat116(urlCat116.trim());
+    if (urlScenarioId) setLoadedScenarioId(urlScenarioId);
+
+    setHasPrefilledFromUrl(true);
+  }, [searchParams, hasPrefilledFromUrl]);
 
   const handleExplain = async () => {
     setError("");
@@ -362,8 +398,33 @@ export default function ExplainabilityPage() {
     }
   };
 
-  const handleSimulationExplain = async () => {
-    setSimError("");
+  useEffect(() => {
+    if (!hasPrefilledFromUrl) return;
+    if (hasAutoExecuted) return;
+    if (!loadedScenarioId || !cont1 || !cat1) return;
+
+    setHasAutoExecuted(true);
+    const timer = setTimeout(() => {
+      handleExplain();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasPrefilledFromUrl, loadedScenarioId, cont1, cat1, hasAutoExecuted]);
+
+  const handleGoToScoring = () => {
+    const params = new URLSearchParams({
+      cont1,
+      cat1,
+      ...(cat71 ? { cat71 } : {}),
+      ...(cat89 ? { cat89 } : {}),
+      ...(cat116 ? { cat116 } : {}),
+      ...(loadedScenarioId ? { demoScenario: loadedScenarioId } : {}),
+    });
+    router.push(`/scoring?${params.toString()}`);
+  };
+
+  const handleSimulationExplain = async () => {    setSimError("");
     setSimResult(null);
 
     if (!result) {
@@ -559,6 +620,36 @@ export default function ExplainabilityPage() {
         </p>
       </section>
 
+      {loadedScenarioId && (
+        <section className="min-w-0 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4 sm:p-5">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-cyan-300">
+                Scenario context loaded
+              </p>
+              <p className="mt-1 text-sm leading-6 text-neutral-100">
+                A predefined operational scenario has been routed into the
+                explainability workspace. Inputs have been pre-filled and the
+                explanation will run automatically.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <span className="w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
+                {loadedScenarioId}
+              </span>
+              <button
+                type="button"
+                onClick={handleGoToScoring}
+                className="w-fit rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-xs font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+              >
+                Run in Scoring →
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="grid min-w-0 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -679,6 +770,13 @@ export default function ExplainabilityPage() {
             </button>
 
             <button
+              onClick={handleGoToScoring}
+              className="w-full rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20 sm:w-auto"
+            >
+              Run in Scoring →
+            </button>
+
+            <button
               onClick={() => {
                 setCont1("");
                 setCat1("");
@@ -773,6 +871,32 @@ export default function ExplainabilityPage() {
                   </p>
                 </div>
               </div>
+
+              {rankedFeatures[0] && (
+                <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-xs uppercase tracking-wide text-cyan-300">
+                      Dominant Driver
+                    </p>
+                    <span className="w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
+                      Highest Absolute SHAP Contribution
+                    </span>
+                  </div>
+                  <p className="mt-3 break-all text-lg font-semibold text-white">
+                    {rankedFeatures[0].feature}
+                  </p>
+                  <p className="mt-1 text-sm text-neutral-300">
+                    Contribution:{" "}
+                    <span className="font-semibold text-white">
+                      {rankedFeatures[0].value >= 0 ? "+" : ""}
+                      {rankedFeatures[0].value.toFixed(4)}
+                    </span>
+                    {" "}— this feature is producing the largest individual impact
+                    on the current prediction and is the primary driver to watch
+                    when evaluating scenario sensitivity.
+                  </p>
+                </div>
+              )}
 
               <div className="rounded-xl border border-neutral-800 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
@@ -1367,5 +1491,31 @@ export default function ExplainabilityPage() {
         </section>
       )}
     </div>
+  );
+}
+
+function ExplainabilityPageFallback() {
+  return (
+    <div className="min-w-0 space-y-6 sm:space-y-8">
+      <section className="flex min-w-0 flex-col gap-3 border-b border-neutral-800 pb-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
+          Explainability Workbench
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+          Model Explainability
+        </h1>
+        <p className="max-w-3xl text-sm leading-6 text-neutral-400">
+          Loading explainability workspace...
+        </p>
+      </section>
+    </div>
+  );
+}
+
+export default function ExplainabilityPage() {
+  return (
+    <Suspense fallback={<ExplainabilityPageFallback />}>
+      <ExplainabilityPageContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { API_BASE_URL } from "@/lib/config";
 import {
   BarChart,
@@ -855,6 +856,8 @@ function ChartShell({
 }
 
 export default function MonitoringPage() {
+  const router = useRouter();
+
   const [summary, setSummary] = useState<
     MonitoringResponse | DistributionSummary | null
   >(null);
@@ -1033,6 +1036,60 @@ export default function MonitoringPage() {
 
       {!isLoading && !error && distribution && (
         <>
+          {/* ── System Status Banner ── */}
+          <section
+            className={`min-w-0 rounded-2xl border p-4 sm:p-5 ${stabilityTone.badge.includes("emerald")
+              ? "border-emerald-500/20 bg-emerald-500/10"
+              : stabilityTone.badge.includes("amber")
+              ? "border-amber-500/20 bg-amber-500/10"
+              : stabilityTone.badge.includes("orange")
+              ? "border-orange-500/20 bg-orange-500/10"
+              : "border-red-500/20 bg-red-500/10"
+            }`}
+          >
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <span
+                  className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                    stability.level === "Stable"
+                      ? "bg-emerald-400"
+                      : stability.level === "Watch"
+                      ? "bg-amber-400"
+                      : stability.level === "At Risk"
+                      ? "bg-orange-400"
+                      : "bg-red-400"
+                  }`}
+                />
+                <div className="min-w-0">
+                  <p className="text-xs uppercase tracking-wide text-neutral-400">
+                    System Status
+                  </p>
+                  <p className="mt-0.5 text-base font-semibold text-white">
+                    {stability.level} — Stability Score {stability.score}/100
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <span
+                  className={`w-fit rounded-full border px-3 py-1 text-xs font-medium ${stabilityTone.badge}`}
+                >
+                  {stability.level}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => router.push("/explainability")}
+                  className="w-fit rounded-xl border border-violet-500/30 bg-violet-500/10 px-4 py-2 text-xs font-semibold text-violet-300 transition hover:bg-violet-500/20"
+                >
+                  Investigate Drivers →
+                </button>
+              </div>
+            </div>
+
+            <p className="mt-3 text-sm leading-6 text-neutral-300">
+              {stabilityTone.text}
+            </p>
+          </section>
           <section className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
@@ -1797,9 +1854,18 @@ export default function MonitoringPage() {
                 </h2>
               </div>
 
-              <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
-                Connected Insight
-              </span>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <span className="w-fit rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
+                  Connected Insight
+                </span>
+                <button
+                  type="button"
+                  onClick={() => router.push("/explainability")}
+                  className="w-fit rounded-xl border border-violet-500/30 bg-violet-500/10 px-4 py-2 text-xs font-semibold text-violet-300 transition hover:bg-violet-500/20"
+                >
+                  Investigate Drivers →
+                </button>
+              </div>
             </div>
 
             <div className="mt-6 grid min-w-0 gap-4 xl:grid-cols-2">
@@ -1916,10 +1982,17 @@ export default function MonitoringPage() {
             </div>
 
             <div className="min-w-0 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-6">
-              <p className="text-sm text-neutral-400">Recent Activity</p>
-              <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
-                Prediction Feed
-              </h2>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <p className="text-sm text-neutral-400">Recent Activity</p>
+                  <h2 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
+                    Prediction Feed
+                  </h2>
+                </div>
+                <span className="w-fit rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs font-medium text-neutral-400">
+                  Last {recentPredictions.length} predictions (recent window)
+                </span>
+              </div>
 
               {recentPredictions.length === 0 ? (
                 <div className="mt-6 rounded-xl border border-dashed border-neutral-800 bg-black/20 p-5 sm:p-6">

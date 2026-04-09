@@ -36,56 +36,56 @@ type WalkthroughStep = {
 
 const DEMO_SCENARIOS: DemoScenario[] = [
   {
-    id: "low-severity",
-    title: "Low Severity Claim",
+    id: "baseline-stable",
+    title: "Stable Baseline Claim",
     badge: "Stable",
     tone: "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
     description:
-      "A lower-intensity scenario designed to show a contained severity outcome and a lighter operational recommendation.",
-    cont1: 8,
+      "Validated baseline scenario used to establish a controlled medium-severity starting point before counterfactual testing.",
+    cont1: 15000,
     cat1: "A",
     cat71: "A",
-    cat89: "B",
+    cat89: "A",
     cat116: "A",
   },
   {
-    id: "medium-severity",
-    title: "Medium Severity Claim",
-    badge: "Balanced",
-    tone: "border-amber-500/20 bg-amber-500/10 text-amber-300",
+    id: "dominant-driver",
+    title: "Dominant Driver Shift",
+    badge: "Sensitivity",
+    tone: "border-cyan-500/20 bg-cyan-500/10 text-cyan-300",
     description:
-      "A moderate scenario that should surface a more balanced decision profile and meaningful explainability output.",
-    cont1: 35,
-    cat1: "B",
-    cat71: "B",
-    cat89: "C",
-    cat116: "B",
+      "Launch the validated baseline, then trigger a cat71 shift from A to B in scoring to demonstrate material model sensitivity.",
+    cont1: 15000,
+    cat1: "A",
+    cat71: "A",
+    cat89: "A",
+    cat116: "A",
   },
   {
-    id: "high-severity",
-    title: "High Severity Claim",
+    id: "weak-driver",
+    title: "Weak Driver Stability Test",
+    badge: "Controlled",
+    tone: "border-amber-500/20 bg-amber-500/10 text-amber-300",
+    description:
+      "Start from the validated baseline and adjust weaker drivers such as cat89 or cat116 to demonstrate limited movement.",
+    cont1: 15000,
+    cat1: "A",
+    cat71: "A",
+    cat89: "A",
+    cat116: "A",
+  },
+  {
+    id: "stress-case",
+    title: "Stress Escalation",
     badge: "Escalate",
     tone: "border-red-500/20 bg-red-500/10 text-red-300",
     description:
-      "A stronger-risk scenario intended to demonstrate elevated severity, more serious decision guidance, and stronger driver movement.",
-    cont1: 82,
-    cat1: "C",
-    cat71: "D",
-    cat89: "D",
-    cat116: "C",
-  },
-  {
-    id: "edge-case-shift",
-    title: "Edge Case Shift",
-    badge: "Stress Test",
-    tone: "border-violet-500/20 bg-violet-500/10 text-violet-300",
-    description:
-      "A scenario designed to surface behavior under sharper feature interactions and distribution shifts.",
-    cont1: 58,
-    cat1: "B",
-    cat71: "D",
+      "Start from the validated baseline and apply the guided stress simulation in scoring to demonstrate escalation.",
+    cont1: 15000,
+    cat1: "A",
+    cat71: "A",
     cat89: "A",
-    cat116: "D",
+    cat116: "A",
   },
 ];
 
@@ -99,7 +99,7 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     observation:
       "The system establishes a stable baseline prediction with consistent decision outputs and a well-aligned operational recommendation.",
     actionLabel: "Launch baseline scenario",
-    scenarioId: "medium-severity",
+    scenarioId: "baseline-stable",
   },
   {
     id: "weak-change",
@@ -110,7 +110,7 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     observation:
       "The system demonstrates stability under weak feature perturbations, indicating controlled sensitivity and resistance to noise.",
     actionLabel: "Start from baseline for weak-driver test",
-    scenarioId: "medium-severity",
+    scenarioId: "weak-driver",
   },
   {
     id: "dominant-shift",
@@ -121,7 +121,7 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     observation:
       "The system exhibits a dominant-driver response, producing a material shift in prediction, risk classification, and decision intensity.",
     actionLabel: "Launch dominant-driver story",
-    scenarioId: "medium-severity",
+    scenarioId: "dominant-driver",
   },
   {
     id: "stress-case",
@@ -132,7 +132,7 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     observation:
       "The system transitions into a higher-risk operational state, demonstrating escalation behavior and decision pathway adjustment under stress conditions.",
     actionLabel: "Launch escalation scenario",
-    scenarioId: "high-severity",
+    scenarioId: "stress-case",
   },
 ];
 
@@ -407,9 +407,10 @@ export default function OverviewPage() {
                   Execution note
                 </p>
                 <p className="mt-2 text-sm leading-6 text-neutral-100">
-                  Initiate the scenario and evaluate system outputs across
-                  prediction, decision intelligence, and counterfactual
-                  simulation layers.
+                  Each step launches from the same validated baseline. Once
+                  inside scoring, use the guided simulation actions to run the
+                  intended story — stability check, weak-driver test,
+                  dominant-driver shift, or stress escalation.
                 </p>
               </div>
             </div>
@@ -451,15 +452,16 @@ export default function OverviewPage() {
         <div className="flex flex-col gap-4 border-b border-neutral-800 pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 sm:text-sm">
-              Scenario Intelligence Layer
+              Scenario Launch Layer
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-              Predefined operational scenarios
+              Guided operational entry points
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-neutral-400">
-              This layer provides structured input configurations designed to
-              surface distinct model behaviors, decision boundaries, and
-              explainability patterns across controlled operational conditions.
+              Each card launches from the same validated baseline payload. The
+              distinct behavior — stability check, dominant-driver shift,
+              weak-driver test, or stress escalation — is demonstrated through
+              the guided simulation actions inside the scoring workspace.
             </p>
           </div>
 
@@ -543,7 +545,7 @@ export default function OverviewPage() {
 
               <div className="mt-5 flex flex-col gap-2 rounded-xl border border-neutral-800 bg-neutral-950/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-neutral-400">
-                  Route this scenario into the scoring workspace for evaluation.
+                  Launches the validated baseline into scoring — follow the guided actions to run the intended story.
                 </p>
                 <span className="text-sm font-semibold text-white">
                   Open Scoring →
