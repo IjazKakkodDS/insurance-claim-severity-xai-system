@@ -885,7 +885,7 @@ See the [LICENSE](LICENSE) file for full details.
 
 Machine Learning Systems | Explainable AI | Model Governance
 
-Focused on building production-grade ML systems with emphasis on interpretability, observability, lifecycle control, and decision-oriented AI platforms.
+Focused on building production-style ML systems with emphasis on interpretability, observability, lifecycle control, and decision-oriented AI platforms.
 
 [![GitHub](https://img.shields.io/badge/GitHub-IjazKakkodDS-181717?logo=github&logoColor=white)](https://github.com/IjazKakkodDS)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-ijazkakkod-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ijazkakkod/)

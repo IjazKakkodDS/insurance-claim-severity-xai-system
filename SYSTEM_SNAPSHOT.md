@@ -20,7 +20,7 @@
 
 ## One Sentence
 
-A production-grade decision intelligence platform that predicts insurance claim severity, explains every prediction at runtime, monitors model behavior in production, and surfaces full lifecycle governance through a governed, operator-facing product interface.
+A production-style decision intelligence platform that predicts insurance claim severity, explains every prediction at runtime, monitors model behavior in production, and surfaces full lifecycle governance through a governed, operator-facing product interface.
 
 ---
 
