@@ -12,7 +12,7 @@
 ![Evidently](https://img.shields.io/badge/Evidently-Monitoring-6C5CE7)
 ![Docker](https://img.shields.io/badge/Docker-Deployment-2496ED?logo=docker&logoColor=white)
 
-**Live platform:** [insurance-claim-severity-xai-system.vercel.app](https://insurance-claim-severity-xai-system.vercel.app/)  |  **Full documentation:** [README.md](./README.md)
+**Live platform:** [insurance-claim-severity-xai-system.vercel.app](https://insurance-claim-severity-xai-system.vercel.app/)  |  **Full documentation:** [README.md](../README.md)
 
 > Backend hosted on Render free tier. Allow 30 to 60 seconds on first request for cold start.
 

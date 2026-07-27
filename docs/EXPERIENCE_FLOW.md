@@ -168,5 +168,5 @@ In those three steps, you will see a prediction change, understand exactly why i
 
 ---
 
-*Full technical documentation: [README.md](./README.md)*
+*Full technical documentation: [README.md](../README.md)*
 *System overview: [SYSTEM_SNAPSHOT.md](./SYSTEM_SNAPSHOT.md)*
