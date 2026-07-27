@@ -31,7 +31,15 @@ jobs:
           python -c "import src.api.schemas"
 
       - name: Run test suite
-        run: python -m pytest tests/ -v
+        run: |
+          python -m pytest tests/ -v > pytest_output.log 2>&1
+          code=$?
+          cat pytest_output.log
+          if [ $code -ne 0 ]; then
+            tail -c 3000 pytest_output.log | awk '{printf "%s%%0A", $0}' > /tmp/ann.txt
+            echo "::error::$(cat /tmp/ann.txt)"
+          fi
+          exit $code
 
   frontend:
     name: Frontend build
