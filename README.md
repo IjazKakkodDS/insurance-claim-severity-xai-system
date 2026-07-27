@@ -29,6 +29,23 @@ A production-style machine learning platform for **insurance claim severity pred
 
 > Note: The backend is hosted on Render's free tier. Initial requests may take 30–60 seconds while the service cold-starts.
 
+> **Demo scope:** The system has a live portfolio demo and a live API surface. Formal governance documentation ([Responsible AI](artifacts/governance/RESPONSIBLE_AI.md)) classifies the model as pre-production, and it is not approved for real insurance claim decisions.
+
+---
+
+## Documentation
+
+| Document | Purpose |
+|---|---|
+| [System Snapshot](docs/SYSTEM_SNAPSHOT.md) | One-page system summary |
+| [Experience Flow](docs/EXPERIENCE_FLOW.md) | Guided end-to-end product walkthrough |
+| [Model Card](docs/MODEL_CARD.md) | Model type, training data, metrics, intended use, limitations |
+| [MLOps Readiness](docs/MLOPS_READINESS.md) | Lifecycle, reproducibility, and operational maturity assessment |
+| [Benchmarks](docs/BENCHMARKS.md) | Model selection and evaluation metrics |
+| [Portfolio Case Study](docs/PORTFOLIO_CASE_STUDY.md) | Case-study narrative of the system's design and tradeoffs |
+| [Architecture Diagrams](docs/architecture/) | Numbered SVG diagrams for each architectural view |
+| [Screenshots](docs/screenshots/) | Product surface screenshots |
+
 ---
 
 ## System Summary
@@ -137,6 +154,8 @@ This allows the severity signal to be consumed by downstream systems with contex
 
 ### System Context
 
+![System at a glance](docs/architecture/01_system_at_a_glance.svg)
+
 ```mermaid
 graph LR
     subgraph UPSTREAM["Upstream"]
@@ -178,6 +197,8 @@ The system context diagram shows the platform's position in the broader workflow
 ## Architecture
 
 ### End-to-End Lifecycle
+
+![End-to-end lifecycle](docs/architecture/02_end_to_end_lifecycle.svg)
 
 ```mermaid
 graph LR
@@ -221,6 +242,8 @@ The lifecycle moves left to right across five isolated stages. The **Data Layer*
 
 The runtime path is explicitly separated into latency-sensitive (hot path) and analytical (cold path) operations.
 
+![Hot path vs cold path](docs/architecture/03_hot_cold_path.svg)
+
 ```mermaid
 graph LR
     U[User] --> FE[Next.js Frontend]
@@ -250,6 +273,8 @@ The backend separates concerns into two explicit paths. The **hot path** handles
 ---
 
 ### Model Selection
+
+![Model selection pipeline](docs/architecture/04_model_selection_pipeline.svg)
 
 ```mermaid
 graph LR
@@ -295,6 +320,8 @@ Five candidate models are trained under identical cross-validation conditions. X
 
 ### MLflow Lifecycle Control
 
+![MLflow model lifecycle](docs/architecture/05_mlflow_model_lifecycle.svg)
+
 ```mermaid
 graph LR
     subgraph TRAINING["Training Output"]
@@ -321,6 +348,8 @@ DVC pipeline outputs trigger an MLflow run that captures full parameter, metric,
 ---
 
 ### Monitoring Pipeline
+
+![Monitoring pipeline](docs/architecture/06_monitoring_pipeline.svg)
 
 ```mermaid
 graph LR
@@ -363,6 +392,8 @@ Prediction logs and baseline statistics feed two parallel analysis paths: distri
 
 ### Decision Flow
 
+![Decision flow](docs/architecture/07_decision_flow.svg)
+
 ```mermaid
 graph LR
     subgraph ENTRY["Input"]
@@ -395,6 +426,8 @@ A claim input is transformed by the persisted feature pipeline before reaching t
 
 ### Feature Pipeline
 
+![Feature pipeline](docs/architecture/08_feature_pipeline.svg)
+
 ```mermaid
 graph LR
     subgraph PROC["Processing"]
@@ -421,6 +454,8 @@ Raw features are split at detection time into categorical and numerical branches
 ---
 
 ### Request Execution Flow
+
+![Request execution flow](docs/architecture/09_request_execution.svg)
 
 ```mermaid
 graph LR
@@ -451,6 +486,8 @@ Each request is validated through Pydantic before any computation begins. The va
 ---
 
 ### Governance Flow
+
+![Governance flow](docs/architecture/10_governance_flow.svg)
 
 ```mermaid
 graph LR
@@ -781,12 +818,12 @@ src/
 artifacts/
   baseline_stats.json         # Training-time distribution baseline for monitoring
   feature_manifest.json       # Feature contract used for validation and serving
-  governance/                 # Model card and responsible AI artifacts
+  governance/                 # Model card (JSON) and responsible AI / explainability artifacts
 
 data/
-  raw/                        # Source data (Allstate Claim Severity)
-  processed/                  # Cleaned and validated data
-  features/                   # Engineered feature sets
+  raw/                        # Source data (Allstate Claim Severity) — DVC-tracked, not committed
+  processed/                  # Cleaned and validated data — DVC-tracked, not committed
+  features/                   # Engineered feature sets — DVC-tracked, not committed
   validation_reports/         # Schema validation outputs
 
 models/
@@ -794,13 +831,28 @@ models/
   feature_pipeline.pkl        # Persisted preprocessing pipeline (shared by training and serving)
 
 reports/
-  evaluation/                 # Model evaluation outputs across all candidates
-  shap/                       # SHAP summary and feature importance artifacts
-  evidently/                  # Generated monitoring reports
+  evaluation_report.json      # Held-out evaluation metrics
+  model_metrics.json          # Model selection metrics
+  residual_plot.png           # Evaluation diagnostic
+  error_distribution.png      # Evaluation diagnostic
+  shap_summary_plot.png       # SHAP summary artifact
+  shap_feature_importance.png # SHAP feature importance artifact
+  evidently/                  # Generated Evidently monitoring reports
+
+docs/
+  SYSTEM_SNAPSHOT.md          # One-page system summary
+  EXPERIENCE_FLOW.md          # Guided product walkthrough
+  MODEL_CARD.md               # Readable model card
+  MLOPS_READINESS.md          # Lifecycle / MLOps maturity assessment
+  BENCHMARKS.md               # Performance and evaluation benchmarks
+  PORTFOLIO_CASE_STUDY.md     # Case-study narrative for portfolio review
+  architecture/                # Numbered architecture SVGs
+  screenshots/                 # Product surface screenshots
+  evidence/                    # Per-claim verification notes
 
 frontend/
-  app/
-    overview/                 # Platform entry and readiness surface
+  src/app/
+    page.tsx                  # Overview / platform entry surface
     scoring/                  # Live prediction and counterfactual surface
     explainability/           # SHAP attribution and comparison surface
     monitoring/               # Drift and distribution observability surface

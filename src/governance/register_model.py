@@ -58,7 +58,7 @@ def build_metadata(run_id: str) -> dict:
         "model_file": str(MODEL_PATH.relative_to(PROJECT_ROOT)),
         "pipeline_file": str(PIPELINE_PATH.relative_to(PROJECT_ROOT)),
         "stage": "Production",
-        "version_note": "Initial local registry registration after Phase 7 Docker completion",
+        "version_note": "Initial production registry registration, following backend containerization",
     }
 
 

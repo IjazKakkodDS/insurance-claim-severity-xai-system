@@ -7,5 +7,5 @@
   "model_file": "models\\best_model.pkl",
   "pipeline_file": "models\\feature_pipeline.pkl",
   "stage": "Production",
-  "version_note": "Initial local registry registration after Phase 7 Docker completion"
+  "version_note": "Initial production registry registration, following backend containerization"
 }
