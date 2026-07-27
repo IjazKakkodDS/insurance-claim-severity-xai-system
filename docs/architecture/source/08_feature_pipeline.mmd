@@ -1,0 +1,18 @@
+graph LR
+    subgraph PROC["Processing"]
+        RF[Raw Features] --> CAT[Categorical Detection]
+        RF --> NUM[Numerical Detection]
+        CAT --> ENC[Encoding]
+        NUM --> SCL[Scaling]
+    end
+
+    subgraph PERSIST["Artifact"]
+        ENC --> PIPE[Unified Pipeline]
+        SCL --> PIPE
+        PIPE --> ART[(Persisted Artifact)]
+    end
+
+    subgraph USE["Usage"]
+        ART --> TRAIN[Training Input]
+        ART --> SERVE[Serving Transform]
+    end

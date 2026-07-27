@@ -21,7 +21,9 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
 
       - name: Import-check core src modules
         run: |
@@ -51,6 +53,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Non-blocking: pre-existing, unrelated react-hooks/set-state-in-effect
+      # error in src/components/layout/sidebar.tsx. Not introduced by this
+      # change; fixing it is out of scope here. Kept visible in CI output
+      # rather than silently skipped.
       - name: Lint (non-blocking)
         run: npm run lint
         continue-on-error: true

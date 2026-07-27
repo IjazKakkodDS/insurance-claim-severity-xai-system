@@ -1,0 +1,23 @@
+graph LR
+    subgraph ENTRY["Input"]
+        CI[Claim Input] --> FT[Feature Transform]
+    end
+
+    subgraph INFERENCE["Inference"]
+        FT --> PRED[Severity Prediction]
+        PRED --> RB[Risk Band]
+        PRED --> SHAP[SHAP Attribution]
+    end
+
+    subgraph DECISION["Decision Assembly"]
+        RB --> REC[Recommendation]
+        SHAP --> DR[Driver Ranking]
+        REC --> OUT[Decision Output]
+        DR --> OUT
+    end
+
+    subgraph FEEDBACK["Feedback Loop"]
+        OUT --> LOG[(Prediction Log)]
+        LOG --> DRIFT[Drift Check]
+        DRIFT --> ESC[Escalation]
+    end

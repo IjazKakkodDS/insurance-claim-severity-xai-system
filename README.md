@@ -156,39 +156,7 @@ This allows the severity signal to be consumed by downstream systems with contex
 
 ![System at a glance](docs/architecture/01_system_at_a_glance.svg)
 
-```mermaid
-graph LR
-    subgraph UPSTREAM["Upstream"]
-        DS[Claim Data Source]
-        DP[Data Preparation]
-    end
-
-    subgraph SYSTEM["This System"]
-        PRED[Severity Prediction]
-        XAI[Explainability]
-        MON[Monitoring]
-        GOV[Governance]
-    end
-
-    subgraph DOWNSTREAM["Downstream"]
-        RES[Reserve Allocation]
-        ROUTE[Case Routing]
-        ESC[Escalation Review]
-    end
-
-    subgraph OPERATOR["Operator"]
-        OPS[ML Engineer / Analyst]
-    end
-
-    DS --> DP
-    DP --> PRED
-    PRED --> RES
-    PRED --> ROUTE
-    PRED --> ESC
-    XAI --> OPS
-    MON --> OPS
-    GOV --> OPS
-```
+<sub>Diagram source: [docs/architecture/source/01_system_at_a_glance.mmd](docs/architecture/source/01_system_at_a_glance.mmd)</sub>
 
 The system context diagram shows the platform's position in the broader workflow. Structured claim data enters from upstream preparation. The platform produces severity estimates consumed directly by downstream allocation, routing, and escalation processes. Operators interact with the system through the explainability, monitoring, and governance surfaces. The platform does not control upstream ingestion or downstream financial decisions; it provides the structured signal and operational visibility that enables those systems to act.
 
@@ -200,39 +168,7 @@ The system context diagram shows the platform's position in the broader workflow
 
 ![End-to-end lifecycle](docs/architecture/02_end_to_end_lifecycle.svg)
 
-```mermaid
-graph LR
-    subgraph INGEST["Data Layer"]
-        A[Raw Data] --> B[Ingestion]
-        B --> C[Schema Validation]
-        C --> D[Feature Engineering]
-    end
-
-    subgraph TRAIN["Training Layer"]
-        D --> E[Candidate Models]
-        E --> F{Model Selection}
-        F --> G[Evaluation]
-    end
-
-    subgraph TRACK["Tracking and Registry"]
-        F --> H[(MLflow Run)]
-        H --> I[Model Registration]
-        I --> J[Registry Metadata]
-        J --> K[Production Pointer]
-    end
-
-    subgraph ARTIFACT["Artifact Layer"]
-        F --> L[SHAP Artifacts]
-        G --> M[Governance Artifacts]
-        L --> M
-    end
-
-    subgraph SERVE["Serving and Product"]
-        K --> N[FastAPI Serving Layer]
-        M --> N
-        N --> O[Next.js Interface]
-    end
-```
+<sub>Diagram source: [docs/architecture/source/02_end_to_end_lifecycle.mmd](docs/architecture/source/02_end_to_end_lifecycle.mmd)</sub>
 
 The lifecycle moves left to right across five isolated stages. The **Data Layer** ingests, validates schema contracts, and engineers features. The **Training Layer** trains multiple candidate models, selects the best by MAE and R², and evaluates it against a held-out set. The **Tracking and Registry** stage captures the full run in MLflow and resolves it to a production pointer: the single file that determines which model artifact the serving layer loads. The **Artifact Layer** runs in parallel, generating SHAP outputs and governance documents from the same selected model. The **Serving and Product** layer exposes everything through FastAPI and Next.js. The production pointer is the hard control boundary between training and serving; no serving component reads from MLflow at runtime.
 
@@ -244,29 +180,7 @@ The runtime path is explicitly separated into latency-sensitive (hot path) and a
 
 ![Hot path vs cold path](docs/architecture/03_hot_cold_path.svg)
 
-```mermaid
-graph LR
-    U[User] --> FE[Next.js Frontend]
-    FE -->|REST| API[FastAPI Gateway]
-
-    subgraph HOT["Hot Path: Synchronous"]
-        API --> PS[Prediction Service]
-        API --> XS[Explainability Service]
-        PS --> ART[(Model + Feature Pipeline)]
-        XS --> ART
-        PS --> RL[Response + Latency Log]
-        XS --> RL
-    end
-
-    subgraph COLD["Cold Path: On-demand"]
-        API --> MON[Monitoring Services]
-        API --> GOV[Governance Layer]
-        MON --> LOGS[(Prediction Logs)]
-        MON --> BASE[(Baseline Stats)]
-        MON --> EVI[Evidently Reports]
-        GOV --> META[(Lifecycle Artifacts)]
-    end
-```
+<sub>Diagram source: [docs/architecture/source/03_hot_cold_path.mmd](docs/architecture/source/03_hot_cold_path.mmd)</sub>
 
 The backend separates concerns into two explicit paths. The **hot path** handles synchronous, latency-sensitive operations: prediction and explanation requests hit the persisted model and feature pipeline artifact and return immediately with a response payload plus latency log. The **cold path** handles on-demand and async operations: monitoring services aggregate from prediction logs and baseline stats to produce Evidently reports and operator decisions; the governance layer reads from file-based lifecycle artifacts with no runtime dependency on MLflow. This separation means monitoring load never interferes with prediction latency.
 
@@ -276,43 +190,7 @@ The backend separates concerns into two explicit paths. The **hot path** handles
 
 ![Model selection pipeline](docs/architecture/04_model_selection_pipeline.svg)
 
-```mermaid
-graph LR
-    subgraph CANDIDATES["Candidate Models"]
-        M1[Linear Regression]
-        M2[Ridge Regression]
-        M3[Random Forest]
-        M4[Gradient Boosting]
-        M5[XGBoost]
-    end
-
-    subgraph EVAL["Evaluation Criteria"]
-        CV[Cross-Validation]
-        MAE[MAE Comparison]
-        R2[R2 Comparison]
-        OVER[Overfitting Check]
-    end
-
-    subgraph SELECT["Selection Outcome"]
-        WIN[XGBoost Selected]
-        REG[Registered in MLflow]
-        PTR[Production Pointer Updated]
-    end
-
-    M1 --> CV
-    M2 --> CV
-    M3 --> CV
-    M4 --> CV
-    M5 --> CV
-    CV --> MAE
-    CV --> R2
-    CV --> OVER
-    MAE --> WIN
-    R2 --> WIN
-    OVER --> WIN
-    WIN --> REG
-    REG --> PTR
-```
+<sub>Diagram source: [docs/architecture/source/04_model_selection_pipeline.mmd](docs/architecture/source/04_model_selection_pipeline.mmd)</sub>
 
 Five candidate models are trained under identical cross-validation conditions. XGBoost was selected on the basis of lowest MAE (1,190.07), highest R² (0.5738), and stable generalization across folds with no evidence of overfitting. The selection outcome is registered in MLflow and the production pointer is updated atomically. All other candidate run metrics are retained in MLflow for future comparison or rollback.
 
@@ -322,26 +200,7 @@ Five candidate models are trained under identical cross-validation conditions. X
 
 ![MLflow model lifecycle](docs/architecture/05_mlflow_model_lifecycle.svg)
 
-```mermaid
-graph LR
-    subgraph TRAINING["Training Output"]
-        DVC[DVC Pipeline] --> RUN[(MLflow Run)]
-    end
-
-    subgraph REGISTRY["Registry Layer"]
-        RUN --> REG[Registered Model]
-        REG --> META[registry_metadata.json]
-        REG --> PTR[production_model_pointer.json]
-        REG --> HIST[model_version_history.json]
-    end
-
-    subgraph CONTROL["Lifecycle Control"]
-        PTR --> SERVE[Serving Layer]
-        PTR --> GOVUI[Governance UI]
-        HIST --> PROM[Promotion Record]
-        HIST --> ROLL[Rollback Record]
-    end
-```
+<sub>Diagram source: [docs/architecture/source/05_mlflow_model_lifecycle.mmd](docs/architecture/source/05_mlflow_model_lifecycle.mmd)</sub>
 
 DVC pipeline outputs trigger an MLflow run that captures full parameter, metric, and artifact lineage. Registration context is written into the MLflow model registry and simultaneously materialized into three file-based artifacts. The production pointer is the single source of truth for which model is live; it is what the serving layer reads on startup. Promotion and rollback events are appended to the version history log, making the full lifecycle auditable without requiring MLflow UI access at runtime.
 
@@ -351,40 +210,7 @@ DVC pipeline outputs trigger an MLflow run that captures full parameter, metric,
 
 ![Monitoring pipeline](docs/architecture/06_monitoring_pipeline.svg)
 
-```mermaid
-graph LR
-    subgraph INPUT["Signal Sources"]
-        LOGS[(Prediction Logs)]
-        BASE[(Baseline Stats)]
-    end
-
-    subgraph ANALYSIS["Analysis Layer"]
-        DIST[Distribution Analysis]
-        DRIFT[Drift Detection]
-        COMP[Baseline Comparison]
-    end
-
-    subgraph OUTPUT["Output Layer"]
-        STAB[Stability Score]
-        EVI[Evidently Report]
-        ESC[Escalation Decision]
-        ACT[Recommended Action]
-    end
-
-    SURF[Monitoring Surface]
-
-    LOGS --> DIST
-    LOGS --> DRIFT
-    BASE --> COMP
-    DIST --> COMP
-    DRIFT --> COMP
-    COMP --> STAB
-    COMP --> EVI
-    STAB --> ESC
-    ESC --> ACT
-    EVI --> SURF
-    ACT --> SURF
-```
+<sub>Diagram source: [docs/architecture/source/06_monitoring_pipeline.mmd](docs/architecture/source/06_monitoring_pipeline.mmd)</sub>
 
 Prediction logs and baseline statistics feed two parallel analysis paths: distribution analysis and drift detection. Both converge at the baseline comparison node, which is where behavioral shift is quantified. From that comparison, two output streams are produced. Evidently generates a structured HTML report that formalizes the state as an auditable artifact. The custom layer produces a stability score, translates it into an escalation decision, and surfaces a recommended action. Both streams converge on the monitoring surface, giving the operator report-grade evidence and an operational decision in the same view.
 
@@ -394,31 +220,7 @@ Prediction logs and baseline statistics feed two parallel analysis paths: distri
 
 ![Decision flow](docs/architecture/07_decision_flow.svg)
 
-```mermaid
-graph LR
-    subgraph ENTRY["Input"]
-        CI[Claim Input] --> FT[Feature Transform]
-    end
-
-    subgraph INFERENCE["Inference"]
-        FT --> PRED[Severity Prediction]
-        PRED --> RB[Risk Band]
-        PRED --> SHAP[SHAP Attribution]
-    end
-
-    subgraph DECISION["Decision Assembly"]
-        RB --> REC[Recommendation]
-        SHAP --> DR[Driver Ranking]
-        REC --> OUT[Decision Output]
-        DR --> OUT
-    end
-
-    subgraph FEEDBACK["Feedback Loop"]
-        OUT --> LOG[(Prediction Log)]
-        LOG --> DRIFT[Drift Check]
-        DRIFT --> ESC[Escalation]
-    end
-```
+<sub>Diagram source: [docs/architecture/source/07_decision_flow.mmd](docs/architecture/source/07_decision_flow.mmd)</sub>
 
 A claim input is transformed by the persisted feature pipeline before reaching the model. The severity prediction immediately branches into two parallel enrichment paths: risk band classification frames the output operationally, and SHAP attribution identifies which features drove the score. Both paths converge into a single decision output containing the severity estimate, risk label, recommendation, and ranked driver list. That output is logged and feeds back into the monitoring layer, where it contributes to drift checks and downstream escalation decisions. Every scoring event is simultaneously a monitoring event.
 
@@ -428,26 +230,7 @@ A claim input is transformed by the persisted feature pipeline before reaching t
 
 ![Feature pipeline](docs/architecture/08_feature_pipeline.svg)
 
-```mermaid
-graph LR
-    subgraph PROC["Processing"]
-        RF[Raw Features] --> CAT[Categorical Detection]
-        RF --> NUM[Numerical Detection]
-        CAT --> ENC[Encoding]
-        NUM --> SCL[Scaling]
-    end
-
-    subgraph PERSIST["Artifact"]
-        ENC --> PIPE[Unified Pipeline]
-        SCL --> PIPE
-        PIPE --> ART[(Persisted Artifact)]
-    end
-
-    subgraph USE["Usage"]
-        ART --> TRAIN[Training Input]
-        ART --> SERVE[Serving Transform]
-    end
-```
+<sub>Diagram source: [docs/architecture/source/08_feature_pipeline.mmd](docs/architecture/source/08_feature_pipeline.mmd)</sub>
 
 Raw features are split at detection time into categorical and numerical branches, each processed independently. Both branches are combined into a single unified pipeline object and serialized as an artifact. The same artifact is loaded at training time to produce model inputs and at serving time to transform live claim features. Using one shared artifact for both paths eliminates training-serving skew at the feature level.
 
@@ -457,29 +240,7 @@ Raw features are split at detection time into categorical and numerical branches
 
 ![Request execution flow](docs/architecture/09_request_execution.svg)
 
-```mermaid
-graph LR
-    subgraph ENTRY["Entry"]
-        REQ[API Request] --> VAL[Pydantic Validation]
-    end
-
-    subgraph COMPUTE["Compute"]
-        VAL --> FT[Feature Transform]
-        FT --> PRED[Model Prediction]
-        PRED --> XAI[SHAP Explanation]
-    end
-
-    subgraph LOGGING["Logging"]
-        PRED --> PLOG[(Prediction Log)]
-        PRED --> LAT[(Latency Log)]
-    end
-
-    subgraph RESPONSE["Response"]
-        XAI --> PAY[Response Payload]
-        PLOG --> MON[Monitoring Layer]
-        LAT --> MON
-    end
-```
+<sub>Diagram source: [docs/architecture/source/09_request_execution.mmd](docs/architecture/source/09_request_execution.mmd)</sub>
 
 Each request is validated through Pydantic before any computation begins. The validated payload passes through the feature pipeline and into the model. Three operations then execute in parallel from the prediction: SHAP attribution is computed and assembled into the response payload, the prediction is written to the log store, and latency is recorded. Both the prediction log and the latency record feed the monitoring layer. Every request is therefore a scoring event and a monitoring event simultaneously.
 
@@ -489,25 +250,7 @@ Each request is validated through Pydantic before any computation begins. The va
 
 ![Governance flow](docs/architecture/10_governance_flow.svg)
 
-```mermaid
-graph LR
-    subgraph ORIGIN["Origin"]
-        RUN[(MLflow Run)] --> REG[Model Registration]
-    end
-
-    subgraph ARTIFACTS["Lifecycle Artifacts"]
-        REG --> META[registry_metadata.json]
-        REG --> PTR[production_model_pointer.json]
-        REG --> HIST[model_version_history.json]
-    end
-
-    subgraph CONTROL["Control Surfaces"]
-        PTR --> SERVE[Serving Layer]
-        PTR --> GOVUI[Governance UI]
-        HIST --> PROM[Promotion Record]
-        HIST --> ROLL[Rollback Record]
-    end
-```
+<sub>Diagram source: [docs/architecture/source/10_governance_flow.mmd](docs/architecture/source/10_governance_flow.mmd)</sub>
 
 Each MLflow run that results in registration writes its outcome into registry metadata and updates the production pointer. The pointer controls which model artifact the serving layer loads. Every change to the pointer, whether a promotion or a rollback, is appended as a timestamped record to the version history. The governance UI reads from these file-based artifacts directly, exposing current model identity, stage, and full change history without requiring live MLflow access.
 

@@ -1,0 +1,31 @@
+graph LR
+    subgraph UPSTREAM["Upstream"]
+        DS[Claim Data Source]
+        DP[Data Preparation]
+    end
+
+    subgraph SYSTEM["This System"]
+        PRED[Severity Prediction]
+        XAI[Explainability]
+        MON[Monitoring]
+        GOV[Governance]
+    end
+
+    subgraph DOWNSTREAM["Downstream"]
+        RES[Reserve Allocation]
+        ROUTE[Case Routing]
+        ESC[Escalation Review]
+    end
+
+    subgraph OPERATOR["Operator"]
+        OPS[ML Engineer / Analyst]
+    end
+
+    DS --> DP
+    DP --> PRED
+    PRED --> RES
+    PRED --> ROUTE
+    PRED --> ESC
+    XAI --> OPS
+    MON --> OPS
+    GOV --> OPS

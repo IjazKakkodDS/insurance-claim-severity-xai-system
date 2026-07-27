@@ -1,0 +1,18 @@
+graph LR
+    subgraph TRAINING["Training Output"]
+        DVC[DVC Pipeline] --> RUN[(MLflow Run)]
+    end
+
+    subgraph REGISTRY["Registry Layer"]
+        RUN --> REG[Registered Model]
+        REG --> META[registry_metadata.json]
+        REG --> PTR[production_model_pointer.json]
+        REG --> HIST[model_version_history.json]
+    end
+
+    subgraph CONTROL["Lifecycle Control"]
+        PTR --> SERVE[Serving Layer]
+        PTR --> GOVUI[Governance UI]
+        HIST --> PROM[Promotion Record]
+        HIST --> ROLL[Rollback Record]
+    end

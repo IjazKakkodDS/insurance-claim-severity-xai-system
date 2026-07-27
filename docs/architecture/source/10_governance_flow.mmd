@@ -1,0 +1,17 @@
+graph LR
+    subgraph ORIGIN["Origin"]
+        RUN[(MLflow Run)] --> REG[Model Registration]
+    end
+
+    subgraph ARTIFACTS["Lifecycle Artifacts"]
+        REG --> META[registry_metadata.json]
+        REG --> PTR[production_model_pointer.json]
+        REG --> HIST[model_version_history.json]
+    end
+
+    subgraph CONTROL["Control Surfaces"]
+        PTR --> SERVE[Serving Layer]
+        PTR --> GOVUI[Governance UI]
+        HIST --> PROM[Promotion Record]
+        HIST --> ROLL[Rollback Record]
+    end

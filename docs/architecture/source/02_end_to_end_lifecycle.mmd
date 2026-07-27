@@ -1,0 +1,31 @@
+graph LR
+    subgraph INGEST["Data Layer"]
+        A[Raw Data] --> B[Ingestion]
+        B --> C[Schema Validation]
+        C --> D[Feature Engineering]
+    end
+
+    subgraph TRAIN["Training Layer"]
+        D --> E[Candidate Models]
+        E --> F{Model Selection}
+        F --> G[Evaluation]
+    end
+
+    subgraph TRACK["Tracking and Registry"]
+        F --> H[(MLflow Run)]
+        H --> I[Model Registration]
+        I --> J[Registry Metadata]
+        J --> K[Production Pointer]
+    end
+
+    subgraph ARTIFACT["Artifact Layer"]
+        F --> L[SHAP Artifacts]
+        G --> M[Governance Artifacts]
+        L --> M
+    end
+
+    subgraph SERVE["Serving and Product"]
+        K --> N[FastAPI Serving Layer]
+        M --> N
+        N --> O[Next.js Interface]
+    end

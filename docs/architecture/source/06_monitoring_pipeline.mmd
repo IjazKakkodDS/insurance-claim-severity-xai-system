@@ -1,0 +1,32 @@
+graph LR
+    subgraph INPUT["Signal Sources"]
+        LOGS[(Prediction Logs)]
+        BASE[(Baseline Stats)]
+    end
+
+    subgraph ANALYSIS["Analysis Layer"]
+        DIST[Distribution Analysis]
+        DRIFT[Drift Detection]
+        COMP[Baseline Comparison]
+    end
+
+    subgraph OUTPUT["Output Layer"]
+        STAB[Stability Score]
+        EVI[Evidently Report]
+        ESC[Escalation Decision]
+        ACT[Recommended Action]
+    end
+
+    SURF[Monitoring Surface]
+
+    LOGS --> DIST
+    LOGS --> DRIFT
+    BASE --> COMP
+    DIST --> COMP
+    DRIFT --> COMP
+    COMP --> STAB
+    COMP --> EVI
+    STAB --> ESC
+    ESC --> ACT
+    EVI --> SURF
+    ACT --> SURF

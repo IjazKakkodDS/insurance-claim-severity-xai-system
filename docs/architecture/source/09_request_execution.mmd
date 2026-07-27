@@ -1,0 +1,21 @@
+graph LR
+    subgraph ENTRY["Entry"]
+        REQ[API Request] --> VAL[Pydantic Validation]
+    end
+
+    subgraph COMPUTE["Compute"]
+        VAL --> FT[Feature Transform]
+        FT --> PRED[Model Prediction]
+        PRED --> XAI[SHAP Explanation]
+    end
+
+    subgraph LOGGING["Logging"]
+        PRED --> PLOG[(Prediction Log)]
+        PRED --> LAT[(Latency Log)]
+    end
+
+    subgraph RESPONSE["Response"]
+        XAI --> PAY[Response Payload]
+        PLOG --> MON[Monitoring Layer]
+        LAT --> MON
+    end

@@ -1,0 +1,21 @@
+graph LR
+    U[User] --> FE[Next.js Frontend]
+    FE -->|REST| API[FastAPI Gateway]
+
+    subgraph HOT["Hot Path: Synchronous"]
+        API --> PS[Prediction Service]
+        API --> XS[Explainability Service]
+        PS --> ART[(Model + Feature Pipeline)]
+        XS --> ART
+        PS --> RL[Response + Latency Log]
+        XS --> RL
+    end
+
+    subgraph COLD["Cold Path: On-demand"]
+        API --> MON[Monitoring Services]
+        API --> GOV[Governance Layer]
+        MON --> LOGS[(Prediction Logs)]
+        MON --> BASE[(Baseline Stats)]
+        MON --> EVI[Evidently Reports]
+        GOV --> META[(Lifecycle Artifacts)]
+    end

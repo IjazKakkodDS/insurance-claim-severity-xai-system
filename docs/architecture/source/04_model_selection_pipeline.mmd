@@ -1,0 +1,35 @@
+graph LR
+    subgraph CANDIDATES["Candidate Models"]
+        M1[Linear Regression]
+        M2[Ridge Regression]
+        M3[Random Forest]
+        M4[Gradient Boosting]
+        M5[XGBoost]
+    end
+
+    subgraph EVAL["Evaluation Criteria"]
+        CV[Cross-Validation]
+        MAE[MAE Comparison]
+        R2[R2 Comparison]
+        OVER[Overfitting Check]
+    end
+
+    subgraph SELECT["Selection Outcome"]
+        WIN[XGBoost Selected]
+        REG[Registered in MLflow]
+        PTR[Production Pointer Updated]
+    end
+
+    M1 --> CV
+    M2 --> CV
+    M3 --> CV
+    M4 --> CV
+    M5 --> CV
+    CV --> MAE
+    CV --> R2
+    CV --> OVER
+    MAE --> WIN
+    R2 --> WIN
+    OVER --> WIN
+    WIN --> REG
+    REG --> PTR
