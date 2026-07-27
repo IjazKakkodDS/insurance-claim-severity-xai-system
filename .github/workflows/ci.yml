@@ -36,8 +36,7 @@ jobs:
           code=$?
           cat pytest_output.log
           if [ $code -ne 0 ]; then
-            tail -c 3000 pytest_output.log | awk '{printf "%s%%0A", $0}' > /tmp/ann.txt
-            echo "::error::$(cat /tmp/ann.txt)"
+            echo "::error::PYTEST_B64:$(tail -c 3000 pytest_output.log | base64 -w0)"
           fi
           exit $code
 
