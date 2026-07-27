@@ -31,16 +31,7 @@ jobs:
           python -c "import src.api.schemas"
 
       - name: Run test suite
-        run: |
-          set +e
-          python -m pytest tests/ -v > pytest_output.log 2>&1
-          code=$?
-          set -e
-          cat pytest_output.log
-          if [ $code -ne 0 ]; then
-            echo "::error file=tests/conftest.py,line=1,title=PYTEST_DIAG::$(tail -c 1500 pytest_output.log | base64 -w0)"
-          fi
-          exit $code
+        run: python -m pytest tests/ -v
 
   frontend:
     name: Frontend build
