@@ -65,7 +65,7 @@ This system must **NOT** be used for:
 
 | Metric | Value |
 | ------ | ----- |
-| MAE    | ~1190 |
+| MAE    | 1,190.07 |
 | RMSE   | ~1865 |
 | R²    | ~0.57 |
 
@@ -186,10 +186,13 @@ The current system does **not yet include full production security controls**.
 | -------------- | ------------------------- |
 | Authentication | User access control       |
 | Rate Limiting  | Prevent abuse             |
+| CORS           | Restrict allowed origins  |
 | Logging        | Secure and sanitized logs |
 | Model Storage  | Secure artifact storage   |
 | Transport      | HTTPS / encryption        |
 | Privacy        | Data governance review    |
+
+When `FRONTEND_URL` is unset, the demo defaults to wildcard CORS (`allow_origins=["*"]`); a production deployment must restrict allowed origins alongside authentication and rate limiting.
 
 ---
 

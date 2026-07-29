@@ -67,7 +67,7 @@ Explanation behavior:
 4. Prediction is generated using the selected best model.
 5. Top 10 SHAP feature contributions are returned.
 
-**Note:** SHAP explains model behavior, not real-world causality. Feature contribution labels are currently generic transformed feature indices (e.g. `feature_12`), not business-native names — see [MLOps Readiness](MLOPS_READINESS.md) for planned remediation.
+**Note:** SHAP explains model behavior, not real-world causality. The live explanation path derives feature names via `pipeline.get_feature_names_out()`, so contribution labels are transformed one-hot names (e.g. `cat__cat71_A`) — more informative than generic transformed-feature indices, but still pipeline-level names, not necessarily original business-friendly labels — see [MLOps Readiness](MLOPS_READINESS.md) for planned remediation.
 
 ## Intended Use
 
@@ -100,7 +100,7 @@ Explanation behavior:
 ## Known Limitations
 
 - Baseline drift reference is currently synthetic rather than historical.
-- Feature contribution labels are generic transformed feature indices.
+- Feature contribution labels are transformed one-hot pipeline names, not necessarily original business-friendly labels.
 - Fairness assessment is not yet implemented.
 - Robust adversarial input testing is not yet implemented.
 

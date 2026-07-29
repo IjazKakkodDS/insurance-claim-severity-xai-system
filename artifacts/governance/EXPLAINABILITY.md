@@ -81,8 +81,8 @@ Example response:
 {
   "prediction": 74200.5,
   "explanation": {
-    "feature_12": 23.5,
-    "feature_4": -18.2
+    "cat__cat71_A": 23.5,
+    "cat__cat89_D": -18.2
   }
 }
 
@@ -98,9 +98,9 @@ Contribution Meaning:
 
 Example:
 
-Feature      Contribution     Meaning
-feature_12   +23.5            pushes prediction higher
-feature_4    -18.2            pulls prediction lower
+Feature          Contribution     Meaning
+cat__cat71_A     +23.5            pushes prediction higher
+cat__cat89_D     -18.2            pulls prediction lower
 
 ---
 
@@ -121,11 +121,11 @@ It does NOT explain:
 
 Feature Naming Limitation
 
-Currently features are returned as:
+The live explanation path derives feature names from the fitted preprocessing pipeline via `pipeline.get_feature_names_out()`, so returned keys are transformed one-hot names such as:
 
-feature_0, feature_1, ...
+cat__cat71_A, cat__cat89_D, cont__cont1, ...
 
-These correspond to transformed features, not original raw features.
+These are more informative than generic transformed-feature indices (they identify the source column and, for categorical features, the specific category), but they are still pipeline-level names, not necessarily original business-friendly feature labels.
 
 ---
 
@@ -141,7 +141,7 @@ These correspond to transformed features, not original raw features.
 
 ## 8. Current Limitations
 
-- Feature names are not business-readable
+- Feature names are transformed one-hot pipeline names (e.g. `cat__cat71_A`), not necessarily original business-friendly feature labels
 - Explanations are in transformed feature space
 - No global explanation dashboard
 - No explanation aggregation across predictions

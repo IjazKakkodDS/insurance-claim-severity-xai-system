@@ -317,7 +317,7 @@ SHAP TreeExplainer is exposed as a dedicated runtime service, not a training art
 | Baseline comparison | Escalation decision |
 | Trend analysis | Recommended action |
 
-The two layers are complementary. Evidently handles structured reporting. The custom layer handles operational interpretation. Neither replaces the other.
+The two layers are complementary. Evidently handles structured reporting. The custom layer handles operational interpretation. Neither replaces the other. Monitoring outputs are derived from the same prediction events that serve user requests, ensuring no divergence between observed and reported behavior.
 
 ### Governance Layer
 
@@ -338,17 +338,32 @@ Next.js frontend decoupled from serving infrastructure. Operates against REST en
 ### Overview
 Platform entry. Backend readiness check, active model metadata visibility, predefined scenario launch, downstream surface routing.
 
+![Overview surface](docs/screenshots/01_overview.png)
+<sub>Live capture: platform entry page showing backend status and the guided walkthrough panel.</sub>
+
 ### Scoring
 Severity prediction with risk band classification, operational recommendation, and counterfactual scenario comparison. Dominant-driver sensitivity testing is available within the same flow.
+
+![Scoring surface](docs/screenshots/02_scoring.png)
+<sub>Live capture: a generated prediction (severity estimate, risk band, and executive decision summary) from the production endpoint.</sub>
 
 ### Explainability
 Live SHAP attribution with feature contribution ranking, positive and negative driver separation, and baseline vs. simulated comparison. Attribution delta analysis identifies which features moved and by how much under scenario change.
 
+![Explainability surface](docs/screenshots/03_explainability.png)
+<sub>Live capture: SHAP explanation output for the same input, with the dominant contributing feature identified.</sub>
+
 ### Monitoring
 Distribution tracking, drift visibility, stability score, skew and volatility interpretation, escalation recommendation, and action prioritization. Converts behavioral signals into structured operator guidance.
 
+![Monitoring surface](docs/screenshots/04_monitoring.png)
+<sub>Live capture: system status banner, stability score, and drift/skew/concentration/volatility penalty breakdown.</sub>
+
 ### Governance
 Active model record, stage visibility, version history, audit framing, rollback readiness indicator, and responsible AI review signals. Exposes lifecycle state without requiring direct MLflow access.
+
+![Governance surface](docs/screenshots/05_governance.png)
+<sub>Live capture: active model record, lifecycle stage, and governance decision panel.</sub>
 
 ---
 
@@ -417,7 +432,7 @@ Latency instrumentation is structural. It feeds the monitoring layer directly ra
 | Constraint | Detail |
 |---|---|
 | Cold start | Backend hosted on Render free tier. First request after inactivity takes 30-60 seconds |
-| SHAP computation | TreeExplainer adds latency proportional to feature count. At 132 features, p95 explanation latency is measurable but acceptable for the current load profile |
+| SHAP computation | TreeExplainer adds latency proportional to feature count. Sample explanation-request latency (n=33, logged locally, not a formal load test): 28.6 ms minimum, 137.6 ms maximum, 57.7 ms average — see [Benchmarks](docs/BENCHMARKS.md) |
 | Monitoring baseline | Initialized from training-time summary statistics. Baseline does not update automatically as production distribution shifts |
 | Governance workflows | Model promotion and rollback are metadata operations. No executable approval gate is wired; governance controls are operator-facing review surfaces |
 | Fairness controls | Subgroup and fairness analysis are not yet active runtime controls |
@@ -439,34 +454,6 @@ Custom monitoring alone could produce all operational signals. Evidently was add
 
 **Stateless serving layer**
 The FastAPI serving layer holds no state. Model and feature pipeline are loaded from disk on startup. This simplifies deployment and horizontal scaling but means cold-start time includes artifact loading. For the current single-instance deployment on Render, this is acceptable.
-
----
-
-## Monitoring and Observability
-
-The monitoring stack operates in two layers with distinct responsibilities.
-
-**Evidently (reporting layer):** generates structured HTML reports from prediction logs and baseline statistics. Formalizes data and behavior comparison into auditable, reviewable artifacts.
-
-**Custom monitoring services (decision layer):** operates on the same signals to produce operator-facing outputs including stability score, drift severity framing, escalation decision, and recommended action. Converts monitoring state into actionable guidance.
-
-Neither layer replaces the other. Evidently handles report-grade observability. The custom layer handles operational response.
-
-Monitoring outputs are derived from the same prediction events that serve user requests, ensuring no divergence between observed and reported behavior.
-
----
-
-## MLflow and Lifecycle Control
-
-MLflow functions as the experiment tracking and registry backbone across the full training lifecycle, covering run parameter and metric lineage, model artifact logging, and registration context for model versioning.
-
-The platform extends MLflow with a custom lifecycle control layer:
-
-- `production_model_pointer.json`: file-based active model reference used by the serving layer and governance surface
-- `registry_metadata.json`: model attributes and registration state readable without MLflow UI access
-- `model_version_history.json`: chronological promotion and rollback log
-
-This separation ensures that experiment lineage (MLflow) and active serving control (custom layer) are independently accessible. The serving layer does not depend on MLflow runtime state.
 
 ---
 
